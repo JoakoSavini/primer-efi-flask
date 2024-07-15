@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #aqui importo los modelos creados
-from modelos import Celular, Marca, Modelo, Accesorios, Categoria, Proveedor, Fabricante
+from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante
 #---
 
 @app.route('/')
