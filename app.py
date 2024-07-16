@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #aqui importo los modelos creados
-from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante
+from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante, Especificacion
 #---
 
 @app.route('/')
@@ -24,14 +24,29 @@ def index():
     return render_template('index.html')
 
 @app.route('/categorias')
-def categorias():
+def index():
     return render_template('categorias.html')
 
 @app.route('/marcas')
-def marcas():
+def index():
     return render_template('marcas.html')
 
-@app.route('/precios')
-def precios():
-    return render_template('precios.html')
+@app.route('/celulares')
+def index():
+    return render_template('celulares.html')
 
+@app.route('/modelos')
+def index():
+    return render_template('modelos.html')
+
+@app.route('/accesorios')
+def index():
+    return render_template('accesorios.html')
+
+@app.route('/proveedores')
+def index():
+    return render_template('proveedores.html')
+
+@app.route('/fabricantes')
+def index():
+    return render_template('fabricantes.html')
