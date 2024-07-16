@@ -2,13 +2,13 @@ from app import db
 
 #Tablas Intermedias
 celular_accesorio = db.Table('celular_accesorio',
-    db.Column('celular_id', db.Integer, db.ForeignKey('celular-id'), primary_key=True),
-    db.Column('accesorio_id', db.Integer, db.ForeignKey('accesorio-id'), primary_key=True)
+    db.Column('celular_id', db.Integer, db.ForeignKey('celular.id'), primary_key=True),
+    db.Column('accesorio_id', db.Integer, db.ForeignKey('accesorio.id'), primary_key=True)
 )
 
 celular_especificacion = db.Table('celular_especificacion',
-    db.Column('celular_id', db.Integer, db.ForeignKey('celular_id'), primary_key=True),
-    db.Column('especificacion_id', db.Integer, db.ForeignKey('especificacion_id'), primary_key=True)
+    db.Column('celular_id', db.Integer, db.ForeignKey('celular.id'), primary_key=True),
+    db.Column('especificacion_id', db.Integer, db.ForeignKey('especificacion.id'), primary_key=True)
 )
 
 #Modelos
@@ -23,11 +23,9 @@ class Celular(db.Model):
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'))
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'))
     
-    #Relaciones
-    
     #Intermedias:
-    accesorios = db.relationship('Accesorio', secondary=celular_accesorio, backref=db.backref('celulares', lazy='dynamic'))
-    especificaciones = db.relationship('Especificacion', secondary=celular_especificacion, backref=db.backref('celulares', lazy='dynamic'))
+    accesorios = db.relationship('Accesorio', secondary=celular_accesorio, backref=db.backref('celular_accesorios', lazy='dynamic'))
+    especificaciones = db.relationship('Especificacion', secondary=celular_especificacion, backref=db.backref('celular_especificaciones', lazy='dynamic'))
 
     def __str__(self) -> str:
         return self.id
@@ -35,7 +33,7 @@ class Celular(db.Model):
 class Especificacion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ram = db.Column(db.Integer, nullable=False)
-    almacentamiento = db.Column(db.Integer, nullable=False)
+    almacenamiento = db.Column(db.Integer, nullable=False)
     
     #Intermedias:
     celulares = db.relationship('Celular', secondary=celular_especificacion, backref=db.backref('especificaciones', lazy='dynamic'))
@@ -61,7 +59,7 @@ class Modelo(db.Model):
     marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'))
     
     #Relaciones
-    marca = db.relationship('Marca', backref=db.backref('modelo', lazy=True))
+    marca = db.relationship('Marca', backref=db.backref('modelos', lazy=True))
     celulares = db.relationship('Celular', backref='modelo', lazy=True)
 
     def __str__(self) -> str:
