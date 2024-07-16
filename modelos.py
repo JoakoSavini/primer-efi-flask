@@ -28,7 +28,7 @@ class Celular(db.Model):
     especificaciones = db.relationship('Especificacion', secondary=celular_especificacion, backref=db.backref('celular_especificaciones', lazy='dynamic'))
 
     def __str__(self) -> str:
-        return self.id
+        return str(self.id)
 
 class Especificacion(db.Model):
     id = db.Column(db.Integer, primary_key=True)

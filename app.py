@@ -81,6 +81,13 @@ def celulares():
         categoria = request.form['categoria']
         ram = request.form['ram']
         almacenamiento = request.form['almacenamiento']
+        #verifico la existencia de las especificaciones
+        especificacion = Especificacion.query.filter_by(ram=ram, almacenamiento=almacenamiento).first()
+        if not especificacion:
+            # Si no existe, la creo y agrego a la bd
+            especificacion = Especificacion(ram=ram, almacenamiento=almacenamiento)
+            db.session.add(especificacion)
+            db.session.commit()
         #Creo el objeto
         nuevo_celular = Celular(
             nombre=nombre,
@@ -104,16 +111,39 @@ def celulares():
 
 @app.route('/modelos', methods=['POST', 'GET'])
 def modelos():
-    return render_template('modelos.html')
+    #obtengo los modelos y marcas
+    modelos = Modelo.query.all()
+    marcas = Marca.query.all()
+    
+    if request.method == 'POST':
+        #obtengo los datos del form
+        nombre = request.form['nombre']
+        marca = request.form['marca']
+        #creo el objeto
+        nuevo_modelo = Modelo(
+            nombre=nombre,
+            marca_id=marca
+        )
+        db.session.add(nuevo_modelo) #lo añado
+        db.session.commit() #hago commit
+        return redirect(url_for('modelos')) #recargo la pagina
+        
+    return render_template(
+        'modelos.html',
+        modelos=modelos,
+        marcas=marcas
+    )
 
 @app.route('/accesorios', methods=['POST', 'GET'])
 def accesorios():
     accesorios = Accesorio.query.all() #Obtengo accesorios
     
     if request.method == 'POST':
-        nombre = request.form['nombre'] #obtengo los datos del form
-        compatibilidad = request.form['compatibilidad'] #obtengo los datos del form
-        nuevo_accesorio = Accesorio(nombre=nombre, compatibilidad=compatibilidad) #creo el obj a agregar
+        #obtengo los datos del form
+        nombre = request.form['nombre'] 
+        compatibilidad = request.form['compatibilidad'] 
+        #creo el objeto
+        nuevo_accesorio = Accesorio(nombre=nombre, compatibilidad=compatibilidad)
         db.session.add(nuevo_accesorio) #lo añado
         db.session.commit() #hago commit
         return redirect(url_for('accesorios')) #recargo la pagina
@@ -125,8 +155,46 @@ def accesorios():
 
 @app.route('/proveedores', methods=['POST', 'GET'])
 def proveedores():
-    return render_template('proveedores.html')
+    proveedores = Proveedor.query.all() #obtengo los proveedores
+    
+    if request.method == 'POST':
+        #obtengo datos del form
+        nombre = request.form['nombre']
+        localidad = request.form['localidad']
+        contacto = request.form['contacto']
+        #creo el objeto
+        nuevo_proveedor = Proveedor(
+            nombre=nombre,
+            contacto=contacto,
+            localidad=localidad
+        )
+        db.session.add(nuevo_proveedor) #lo añado
+        db.session.commit() #hago commit
+        return redirect(url_for('proveedores')) #recargo la pagina
+            
+    return render_template(
+        'proveedores.html',
+        proveedores=proveedores)
 
 @app.route('/fabricantes', methods=['POST', 'GET'])
 def fabricantes():
-    return render_template('fabricantes.html')
+    fabricantes = Fabricante.query.all() #obtengo los fabricantes
+    
+    if request.method == 'POST':
+        #obtengo los datos del form
+        nombre = request.form['nombre']
+        localidad = request.form['localidad']
+        contacto = request.form['contacto']
+        #creo el objeto
+        nuevo_fabricante = Fabricante(
+            nombre=nombre,
+            contacto=contacto,
+            localidad=localidad
+        )
+        db.session.add(nuevo_fabricante) #lo añado 
+        db.session.commit() #hago commit
+        return redirect(url_for('fabricantes'))
+        
+    return render_template(
+        'fabricantes.html',
+        fabricantes=fabricantes)
