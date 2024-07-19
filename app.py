@@ -23,9 +23,10 @@ from modelos import Celular, Marca, Modelo, Accesorios, Categoria, Proveedor, Fa
 def index():
     return render_template('index.html')
 
-@app.route('/categorias')
+@app.route('/categorias', methods=['GET'])
 def categorias():
-    return render_template('categorias.html')
+    categorias = Categoria.query.all()
+    return render_template('categorias.html', categorias=categorias)
 
 @app.route('/marcas', methods=['GET', 'POST'])
 def marcas():
@@ -41,7 +42,8 @@ def marcas():
 
 @app.route('/precios')
 def precios():
-    return render_template('precios.html')
+    celulares = Celular.query.all()
+    return render_template('precios.html', celulares=celulares)
 
 @app.route('/modelos', methods=['GET', 'POST'])
 def modelos():
@@ -60,13 +62,20 @@ def celulares():
     celulares = Celular.query.all()
     marcas = Marca.query.all()
     modelos = Modelo.query.all()
+    categorias = Categoria.query.all()
 
     if request.method == 'POST':
         modelo = request.form['modelo']
         marca = request.form['marca']
+        categoria = request.form['categoria']
+        precio = request.form['precio']
+        usado = 'usado' in request.form['usado']
         celular_nuevo = Celular(
-            modelo_id=modelo,
+            categoria_id=categoria,
+            modelo_id=modelo,   
             marca_id=marca,
+            precio=precio,
+            usado=usado,
         )
         db.session.add(celular_nuevo)
         db.session.commit()
@@ -77,6 +86,7 @@ def celulares():
         celulares=celulares,
         marcas=marcas,
         modelos=modelos,
+        categorias=categorias
     )
 
 
