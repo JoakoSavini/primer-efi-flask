@@ -52,7 +52,7 @@ class Modelo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
     marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'))
-    celular_id = db.Column(db.Integer, db.ForeignKey('celular.id'))
+
     
     #Relaciones
     celulares = db.relationship('Celular', backref='celular_modelos', lazy=True)
@@ -75,7 +75,6 @@ class Accesorio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
     compatibilidad = db.Column(db.Boolean, default=False)
-    celular_id = db.Column(db.Integer, db.ForeignKey('celular.id'))
     
     #Intermedia:
     celulares = db.relationship('Celular', secondary=celular_accesorio, backref = db.backref('accesorio_celulares', lazy=True))
@@ -88,8 +87,6 @@ class Fabricante(db.Model):
     nombre = db.Column(db.String(50), nullable=False)
     contacto = db.Column(db.Integer, nullable=False)
     localidad = db.Column(db.String(50), nullable=False)
-    marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'))
-    proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'))
     
     #Relaciones
     marcas = db.relationship('Marca', backref='marca_fabricantes', lazy=True)
