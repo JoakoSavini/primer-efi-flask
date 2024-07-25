@@ -22,9 +22,9 @@ class Celular(db.Model):
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'))
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'))
 
-    categoria = db.relationship('Categoria', backref=db.backref('celulares', lazy=True))
-    marca = db.relationship('Marca', backref=db.backref('celulares', lazy=True))
-    modelo = db.relationship('Modelo', backref=db.backref('celulares', lazy=True))
+    categoria = db.relationship('Categoria', backref=db.backref('categoria_celulares', lazy=True))
+    marca = db.relationship('Marca', backref=db.backref('marca_celulares', lazy=True))
+    modelo = db.relationship('Modelo', backref=db.backref('modelo_celulares', lazy=True))
 
 class Especificacion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,8 +41,8 @@ class Marca(db.Model):
     proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'))
     
     #Relaciones
-    fabricante = db.relationship('Fabricante', backref=db.backref('fabricante_marcas', lazy='dynamic'))
-    proveedor = db.relationship('Proveedor', backref=db.backref('proveedor_marcas', lazy='dynamic'))
+    fabricante = db.relationship('Fabricante', backref=db.backref('fabricante_marcas', lazy=True))
+    proveedor = db.relationship('Proveedor', backref=db.backref('proveedor_marcas', lazy=True))
     
 
     def __str__(self) -> str:
@@ -55,7 +55,7 @@ class Modelo(db.Model):
     
     #Relaciones
     celulares = db.relationship('Celular', backref='celular_modelos', lazy=True)
-    marca = db.relationship('Marca', backref=db.backref('marca_modelos', lazy='dynamic'))
+    marca = db.relationship('Marca', backref=db.backref('marca_modelos', lazy=True))
 
     def __str__(self) -> str:
         return self.nombre
@@ -76,7 +76,7 @@ class Accesorio(db.Model):
     compatibilidad = db.Column(db.Boolean, default=False)
     
     #Intermedia:
-    celulares = db.relationship('Celular', secondary=celular_accesorio, backref = db.backref('accesorio_celulares', lazy='dynamic'))
+    celulares = db.relationship('Celular', secondary=celular_accesorio, backref = db.backref('accesorio_celulares', lazy=True))
 
     def __str__(self) -> str:
         return self.nombre
@@ -88,8 +88,8 @@ class Fabricante(db.Model):
     localidad = db.Column(db.String(50), nullable=False)
     
     #Relaciones
-    marcas = db.relationship('Marca', backref='fabricante', lazy=True)
-    proveedores = db.relationship('Proveedor', backref=db.backref('proveedor_fabricantes', lazy='dynamic'))
+    marcas = db.relationship('Marca', backref='marca_fabricantes', lazy=True)
+    proveedores = db.relationship('Proveedor', backref=db.backref('proveedor_fabricantes', lazy=True))
 
 
     def __str__(self) -> str:
@@ -102,8 +102,9 @@ class Proveedor(db.Model):
     localidad = db.Column(db.String(50), nullable=False)
     
     #Relaciones
-    marcas = db.relationship('Marca', backref='proveedor', lazy=True)
+    marcas = db.relationship('Marca', backref=db.backref('marca_proveedores', lazy=True))
     fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'))
+    fabricantes = db.relationship('Fabricante', backref=db.backref('fabricante_proveedores', lazy=True))
     
     def __str__(self) -> str:
         return self.nombre

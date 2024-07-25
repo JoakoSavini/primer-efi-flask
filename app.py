@@ -40,12 +40,8 @@ def marcas():
         return redirect(url_for('marcas'))
     return render_template('marcas.html', marcas=marcas)
 
-@app.route('/precios')
-def precios():
-    celulares = Celular.query.all()
-    return render_template('precios.html', celulares=celulares)
 
-@app.route('/modelos', methods=['GET', 'POST'])
+""" @app.route('/modelos', methods=['GET', 'POST'])
 def modelos():
     modelos = Modelo.query.all()
 
@@ -55,7 +51,7 @@ def modelos():
         db.session.add(nuevo_modelo)
         db.session.commit()
         return redirect(url_for('modelos'))
-    return render_template('modelos.html', modelos=modelos)
+    return render_template('modelos.html', modelos=modelos) """
 
 @app.route('/celulares', methods=['POST', 'GET'])
 def celulares():
