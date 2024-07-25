@@ -16,19 +16,15 @@ class Celular(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=True)
     usado = db.Column(db.Boolean, default=False)
-    stock = db.Column(db.Integer)
-    
-    #Pertenece a:
+    #stock = db.Column(db.Integer)
+    precio = db.Column(db.Float)
     marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'))
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'))
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'))
-    
-    #Intermedias:
-    accesorios = db.relationship('Accesorio', secondary=celular_accesorio, backref=db.backref('celular_accesorios', lazy='dynamic'))
-    especificaciones = db.relationship('Especificacion', secondary=celular_especificacion, backref=db.backref('celular_especificaciones', lazy='dynamic'))
 
-    def __str__(self) -> str:
-        return str(self.id)
+    categoria = db.relationship('Categoria', backref=db.backref('celulares', lazy=True))
+    marca = db.relationship('Marca', backref=db.backref('celulares', lazy=True))
+    modelo = db.relationship('Modelo', backref=db.backref('celulares', lazy=True))
 
 class Especificacion(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -1,9 +1,45 @@
 {% extends "template_base.html" %}
 
-{% block title %}
-
-{% endblock %}
+{% block title %}Agregar Celular{% endblock %}
 
 {% block content %}
+<div class="container">
+    <div class="row">
 
+        <div class="col-6">
+            <h4>Agrega un Celular</h4>
+            <form action="" method="post">
+                <div class="form-check mb-2">
+                    <input type="checkbox" name="usado" class="form-check-input">
+                    <label class="form-check-label" for="usadoCheckbox">Usado?</label>
+                </div>
+                <input type="number" name="precio" class="form-control mb-2" placeholder="Precio">
+                <select name="marca" id="" class="form-control mb-2">
+                    {% for marca in marcas %}
+                        <option value="{{marca.id}}">{{marca.nombre}}</option>
+                    {% endfor %}
+                </select>
+                <select name="modelo" id="" class="form-control mb-2">
+                    {% for modelo in modelos %}
+                        <option value="{{modelo.id}}">{{modelo.nombre}}</option>
+                    {% endfor %}
+                </select>
+                <select name="categoria" id="" class="form-control mb-2">
+                    {% for categoria in categorias %}
+                        <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-success">Agregar</button>
+            </form>
+        </div>
+
+        <div class="col-6">
+            <h4>Listado de Celulares</h4>
+            {% for celular in celulares %}
+            <li> {{celular.marca}} - {{celular.modelo}} - {{celular.categoria}} - {{celular.usado}}</li>
+            {% endfor %}
+        </div>
+    
+    </div>
+</div>
 {% endblock %}

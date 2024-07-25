@@ -23,91 +23,73 @@ from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fab
 def index():
     return render_template('index.html')
 
-@app.route('/categorias', methods=['POST', 'GET'])
+@app.route('/categorias', methods=['GET'])
 def categorias():
-    categorias = Categoria.query.all() #Obtengo las categorias
-    
-    if request.method == 'POST':
-        nombre = request.form['nombre'] #obtengo los datos del form
-        nueva_categoria = Categoria(nombre=nombre) #creo el obj a agregar
-        db.session.add(nueva_categoria) #lo añado
-        db.session.commit() #hago commit
-        return redirect(url_for('categorias')) #recargo la pagina
-    
-    return render_template(
-        'categorias.html',
-        categorias=categorias
-    )
+    categorias = Categoria.query.all()
+    return render_template('categorias.html', categorias=categorias)
 
-@app.route('/marcas', methods=['POST', 'GET'])
+@app.route('/marcas', methods=['GET', 'POST'])
 def marcas():
-    marcas = Marca.query.all() #Obtengo las marcas, fabricantes y proveedores
-    fabricantes = Fabricante.query.all()
-    proveedores = Proveedor.query.all()
-    
+    marcas = Marca.query.all()
+
     if request.method == 'POST':
-        #obtengo los datos del form
         nombre = request.form['nombre']
-        fabricante = request.form['fabricante']
-        proveedor = request.form['proveedor']
-        #creo el obj a agregar
-        nueva_marca = Marca(nombre=nombre, fabricante_id=fabricante, proveedor_id=proveedor) 
-        db.session.add(nueva_marca) #lo añado
-        db.session.commit() #hago commit
-        return redirect(url_for('marcas')) #recargo la pagina
-    
-    return render_template(
-        'marcas.html', 
-        marcas=marcas, 
-        fabricantes=fabricantes, 
-        proveedores=proveedores
-    )
+        nueva_marca = Marca(nombre=nombre)
+        db.session.add(nueva_marca)
+        db.session.commit()
+        return redirect(url_for('marcas'))
+    return render_template('marcas.html', marcas=marcas)
+
+@app.route('/precios')
+def precios():
+    celulares = Celular.query.all()
+    return render_template('precios.html', celulares=celulares)
+
+@app.route('/modelos', methods=['GET', 'POST'])
+def modelos():
+    modelos = Modelo.query.all()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        nuevo_modelo = Modelo(nombre=nombre)
+        db.session.add(nuevo_modelo)
+        db.session.commit()
+        return redirect(url_for('modelos'))
+    return render_template('modelos.html', modelos=modelos)
 
 @app.route('/celulares', methods=['POST', 'GET'])
 def celulares():
-    #Obtengo los modelos necesarios
     celulares = Celular.query.all()
     marcas = Marca.query.all()
     modelos = Modelo.query.all()
     categorias = Categoria.query.all()
-    especificaciones = Especificacion.query.all()
-    
+
     if request.method == 'POST':
-        #Obtengo los datos del form
-        nombre = request.form['nombre']
-        uso = request.form['uso']
-        marca = request.form['marca']
         modelo = request.form['modelo']
+        marca = request.form['marca']
         categoria = request.form['categoria']
-        ram = request.form['ram']
-        almacenamiento = request.form['almacenamiento']
-        #verifico la existencia de las especificaciones
-        especificacion = Especificacion.query.filter_by(ram=ram, almacenamiento=almacenamiento).first()
-        if not especificacion:
-            # Si no existe, la creo y agrego a la bd
-            especificacion = Especificacion(ram=ram, almacenamiento=almacenamiento)
-            db.session.add(especificacion)
-            db.session.commit()
-        #Creo el objeto
-        nuevo_celular = Celular(
-            nombre=nombre,
-            usado=uso,
+        precio = request.form['precio']
+        usado = 'usado' in request.form['usado']
+        celular_nuevo = Celular(
+            categoria_id=categoria,
+            modelo_id=modelo,   
             marca_id=marca,
-            modelo_id=modelo,
-            categoria_id=categoria
+            precio=precio,
+            usado=usado,
         )
-        db.session.add(nuevo_celular)
+        db.session.add(celular_nuevo)
         db.session.commit()
-        return redirect(url_for('celular'))
-    
+        return redirect(url_for('celulares'))
+
     return render_template(
-        'celulares.html', 
+        'celulares.html',
         celulares=celulares,
         marcas=marcas,
         modelos=modelos,
-        categorias=categorias,
-        especificaciones=especificaciones
+        categorias=categorias
     )
+
+
 
 @app.route('/modelos', methods=['POST', 'GET'])
 def modelos():
