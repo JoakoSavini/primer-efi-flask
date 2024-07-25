@@ -23,10 +23,21 @@ from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fab
 def index():
     return render_template('index.html')
 
-@app.route('/categorias', methods=['GET'])
+@app.route('/categorias', methods=['GET', 'POST'])
 def categorias():
-    categorias = Categoria.query.all()
-    return render_template('categorias.html', categorias=categorias)
+    categorias = Categoria.query.all()  
+    
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        nueva_categoria = Categoria(nombre=nombre)
+        db.session.add(nueva_categoria)
+        db.session.commit()
+        return redirect(url_for('categorias'))
+        
+    return render_template(
+        'categorias.html', 
+        categorias=categorias,
+        )
 
 @app.route('/marcas', methods=['GET', 'POST'])
 def marcas():
