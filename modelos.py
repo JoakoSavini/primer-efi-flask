@@ -102,7 +102,6 @@ class Proveedor(db.Model):
     contacto = db.Column(db.Integer, nullable=False)
     localidad = db.Column(db.String(50), nullable=False)
     fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'))
-    marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'))
     
     #Relaciones
     marcas = db.relationship('Marca', backref=db.backref('marca_proveedores', lazy=True))
