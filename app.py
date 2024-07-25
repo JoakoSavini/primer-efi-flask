@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #aqui importo los modelos creados
-from modelos import Celular, Marca, Modelo, Accesorios, Categoria, Proveedor, Fabricante
+from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante, Especificacion
 #---
 
 @app.route('/')
@@ -91,3 +91,92 @@ def celulares():
 
 
 
+@app.route('/modelos', methods=['POST', 'GET'])
+def modelos():
+    #obtengo los modelos y marcas
+    modelos = Modelo.query.all()
+    marcas = Marca.query.all()
+    
+    if request.method == 'POST':
+        #obtengo los datos del form
+        nombre = request.form['nombre']
+        marca = request.form['marca']
+        #creo el objeto
+        nuevo_modelo = Modelo(
+            nombre=nombre,
+            marca_id=marca
+        )
+        db.session.add(nuevo_modelo) #lo añado
+        db.session.commit() #hago commit
+        return redirect(url_for('modelos')) #recargo la pagina
+        
+    return render_template(
+        'modelos.html',
+        modelos=modelos,
+        marcas=marcas
+    )
+
+@app.route('/accesorios', methods=['POST', 'GET'])
+def accesorios():
+    accesorios = Accesorio.query.all() #Obtengo accesorios
+    
+    if request.method == 'POST':
+        #obtengo los datos del form
+        nombre = request.form['nombre'] 
+        compatibilidad = request.form['compatibilidad'] 
+        #creo el objeto
+        nuevo_accesorio = Accesorio(nombre=nombre, compatibilidad=compatibilidad)
+        db.session.add(nuevo_accesorio) #lo añado
+        db.session.commit() #hago commit
+        return redirect(url_for('accesorios')) #recargo la pagina
+    
+    return render_template(
+        'accesorios.html',
+        accesorios=accesorios
+    )
+
+@app.route('/proveedores', methods=['POST', 'GET'])
+def proveedores():
+    proveedores = Proveedor.query.all() #obtengo los proveedores
+    
+    if request.method == 'POST':
+        #obtengo datos del form
+        nombre = request.form['nombre']
+        localidad = request.form['localidad']
+        contacto = request.form['contacto']
+        #creo el objeto
+        nuevo_proveedor = Proveedor(
+            nombre=nombre,
+            contacto=contacto,
+            localidad=localidad
+        )
+        db.session.add(nuevo_proveedor) #lo añado
+        db.session.commit() #hago commit
+        return redirect(url_for('proveedores')) #recargo la pagina
+            
+    return render_template(
+        'proveedores.html',
+        proveedores=proveedores)
+
+@app.route('/fabricantes', methods=['POST', 'GET'])
+def fabricantes():
+    fabricantes = Fabricante.query.all() #obtengo los fabricantes
+    
+    if request.method == 'POST':
+        #obtengo los datos del form
+        nombre = request.form['nombre']
+        localidad = request.form['localidad']
+        contacto = request.form['contacto']
+        #creo el objeto
+        nuevo_fabricante = Fabricante(
+            nombre=nombre,
+            contacto=contacto,
+            localidad=localidad
+        )
+        db.session.add(nuevo_fabricante) #lo añado 
+        db.session.commit() #hago commit
+        return redirect(url_for('fabricantes'))
+        
+    return render_template(
+        'fabricantes.html',
+        fabricantes=fabricantes)
