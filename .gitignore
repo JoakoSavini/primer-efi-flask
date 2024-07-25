@@ -2,3 +2,4 @@ ent
 __pycache__
 venv
 .venv
+.ent
