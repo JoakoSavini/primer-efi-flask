@@ -1,8 +1,8 @@
-"""migracion
+"""primer migrate
 
-Revision ID: 4a6ec11e50e8
+Revision ID: 6b651b9dbfb1
 Revises: 
-Create Date: 2024-07-18 21:56:54.329050
+Create Date: 2024-07-25 21:57:25.997445
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4a6ec11e50e8'
+revision = '6b651b9dbfb1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -61,12 +61,10 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nombre', sa.String(length=50), nullable=True),
     sa.Column('usado', sa.Boolean(), nullable=True),
-    sa.Column('stock', sa.Integer(), nullable=True),
+    sa.Column('precio', sa.Integer(), nullable=True),
     sa.Column('marca_id', sa.Integer(), nullable=True),
     sa.Column('modelo_id', sa.Integer(), nullable=True),
     sa.Column('categoria_id', sa.Integer(), nullable=True),
-    sa.Column('accesorios_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['accesorios_id'], ['accesorios.id'], ),
     sa.ForeignKeyConstraint(['categoria_id'], ['categoria.id'], ),
     sa.ForeignKeyConstraint(['marca_id'], ['marca.id'], ),
     sa.ForeignKeyConstraint(['modelo_id'], ['modelo.id'], ),

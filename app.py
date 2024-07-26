@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 
 #Configuro el SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/efi' #conexion a bd
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/efi2' #conexion a bd
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #evita advertencias
 
 #creo el objeto bd y el migrate
@@ -23,9 +23,11 @@ from modelos import Celular, Marca, Modelo, Accesorios, Categoria, Proveedor, Fa
 def index():
     return render_template('index.html')
 
-@app.route('/categorias')
+@app.route('/categorias', methods=['GET'])
 def categorias():
-    return render_template('categorias.html')
+    categorias = Categoria.query.all()
+
+    return render_template('categorias.html', categorias=categorias)
 
 @app.route('/marcas', methods=['GET', 'POST'])
 def marcas():
@@ -39,9 +41,11 @@ def marcas():
         return redirect(url_for('marcas'))
     return render_template('marcas.html', marcas=marcas)
 
-@app.route('/precios')
+@app.route('/precios', methods=['GET'])
 def precios():
-    return render_template('precios.html')
+    celulares = Celular.query.all()
+
+    return render_template('precios.html',  celulares=celulares)
 
 @app.route('/modelos', methods=['GET', 'POST'])
 def modelos():
@@ -60,11 +64,19 @@ def celulares():
     celulares = Celular.query.all()
     marcas = Marca.query.all()
     modelos = Modelo.query.all()
+    categorias = Categoria.query.all()
 
     if request.method == 'POST':
         modelo = request.form['modelo']
         marca = request.form['marca']
+        usado = 'usado' in request.form
+        precio = float(request.form['precio'])
+        categoria = request.form['categoria']
+
         celular_nuevo = Celular(
+            categoria_id=categoria,
+            usado=usado,
+            precio=precio,
             modelo_id=modelo,
             marca_id=marca,
         )
@@ -74,6 +86,7 @@ def celulares():
 
     return render_template(
         'celulares.html',
+        categorias=categorias,
         celulares=celulares,
         marcas=marcas,
         modelos=modelos,

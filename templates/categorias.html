@@ -5,5 +5,8 @@
 {% endblock%}
 
 {%block content%}
-
+<h4>Gamas:</h4>
+{% for categoria in categorias %}
+    <li>{{categoria.nombre}}</li>
+{% endfor %}
 {% endblock %}

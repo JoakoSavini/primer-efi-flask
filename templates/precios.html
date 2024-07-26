@@ -5,5 +5,7 @@
 {% endblock %}
 
 {% block content %}
-
+{% for celular in celulares %}
+    <li>${{celular.precio}} - {{celular.marca}} - {{celular.modelo}}</li>
+{% endfor %}
 {% endblock %}

@@ -3,18 +3,15 @@ from app import db
 class Celular(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=True)
-    #usado = db.Column(db.Boolean, default=False)
-    #stock = db.Column(db.Integer)
+    usado = db.Column(db.Boolean, default=False)
+    precio = db.Column(db.Integer)
     marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'))
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'))
-    #categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'))
-    #accesorios_id = db.Column(db.Integer, db.ForeignKey('accesorios.id'))
+    categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'))
 
+    categoria = db.relationship('Categoria', backref=db.backref('celulares', lazy=True))
     marca = db.relationship('Marca', backref=db.backref('celulares', lazy=True))
     modelo = db.relationship('Modelo', backref=db.backref('celulares', lazy=True))
-
-    def __str__(self) -> str:
-        return self.id
 
 
 
