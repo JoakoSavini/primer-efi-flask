@@ -5,5 +5,9 @@
 {% endblock %}
 
 {% block content %}
+<h1>Los precios de los celulares en stock</h1>
+{% for celular in celulares %}
+    <h4><li><strong>${{celular.precio}}</strong> - {{celular.marca}} - {{celular.modelo}}</li></h4>
 
+    {% endfor %}
 {% endblock %}

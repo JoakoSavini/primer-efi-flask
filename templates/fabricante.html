@@ -1,0 +1,39 @@
+{% extends 'template_base.html' %}
+{% block title %}
+fabricantes
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h4>Agregar los fabricantes</h4>
+            <h6>Nombre del fabricante</h6>
+            <form action="" method="post">  <!-- Asegurando la ruta de acción -->
+                <div class="form-check mb-2">
+                    <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre del fabricante" required>
+                </div>
+                <h6>Contacto</h6>
+                <div class="form-check mb-2">
+                    <input type="email" name="contacto" class="form-control mb-2" placeholder="Email del fabricante" required>
+                </div>
+                <h6>Localidad</h6>
+                <div class="form-check mb-2">
+                    <input type="text" name="localidad" class="form-control mb-2" placeholder="Localidad del fabricante" required>
+                </div>
+                <button type="submit" class="btn btn-success">Agregar</button>
+            </form>
+
+        </div>
+        <div class="col-6">
+            <h4>Listado de Fabricantes</h4>
+            <ul>
+                {% for fabricante in fabricantes %}
+                    <li><strong>{{ fabricante.nombre }}</strong> - {{ fabricante.contacto }} - {{ fabricante.localidad }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

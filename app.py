@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 
 #Configuro el SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/efi' #conexion a bd
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/efi2' #conexion a bd
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False #evita advertencias
 
 #creo el objeto bd y el migrate
@@ -23,6 +23,13 @@ from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fab
 def index():
     return render_template('index.html')
 
+<<<<<<< HEAD
+@app.route('/categorias', methods=['GET'])
+def categorias():
+    categorias = Categoria.query.all()
+
+    return render_template('categorias.html', categorias=categorias)
+=======
 @app.route('/categorias', methods=['GET', 'POST'])
 def categorias():
     categorias = Categoria.query.all()  
@@ -38,6 +45,7 @@ def categorias():
         'categorias.html', 
         categorias=categorias,
         )
+>>>>>>> master
 
 @app.route('/marcas', methods=['GET', 'POST'])
 def marcas():
@@ -51,6 +59,14 @@ def marcas():
         return redirect(url_for('marcas'))
     return render_template('marcas.html', marcas=marcas)
 
+<<<<<<< HEAD
+@app.route('/precios', methods=['GET'])
+def precios():
+    celulares = Celular.query.all()
+
+    return render_template('precios.html',  celulares=celulares)
+=======
+>>>>>>> master
 
 """ @app.route('/modelos', methods=['GET', 'POST'])
 def modelos():
@@ -74,12 +90,24 @@ def celulares():
     if request.method == 'POST':
         modelo = request.form['modelo']
         marca = request.form['marca']
+<<<<<<< HEAD
+        usado = 'usado' in request.form
+        precio = float(request.form['precio'])
+        categoria = request.form['categoria']
+
+        celular_nuevo = Celular(
+            categoria_id=categoria,
+            usado=usado,
+            precio=precio,
+            modelo_id=modelo,
+=======
         categoria = request.form['categoria']
         precio = request.form['precio']
         usado = 'usado' in request.form['usado']
         celular_nuevo = Celular(
             categoria_id=categoria,
             modelo_id=modelo,   
+>>>>>>> master
             marca_id=marca,
             precio=precio,
             usado=usado,
@@ -90,12 +118,69 @@ def celulares():
 
     return render_template(
         'celulares.html',
+        categorias=categorias,
         celulares=celulares,
         marcas=marcas,
         modelos=modelos,
         categorias=categorias
     )
 
+@app.route('/proveedores', methods=['POST', 'GET'])
+def proveedores():
+    proveedores = Proveedor.query.all()
+    fabricantes = Fabricante.query.all()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        contacto = request.form['contacto']
+        localidad = request.form['localidad']
+        fabricante = request.form['fabricante']
+
+        proveedor_nuevo = Proveedor(
+            nombre = nombre,
+            contacto = contacto,
+            localidad = localidad,
+            fabricante_id = fabricante,
+        )
+        
+        db.session.add(proveedor_nuevo)
+        db.session.commit()
+        return redirect(url_for('proveedores'))
+    
+    return render_template(
+        'proveedores.html',
+        fabricantes=fabricantes,
+        proveedores=proveedores
+
+    )
+
+@app.route('/fabricantes', methods=['POST', 'GET'])
+def fabricantes():
+    fabricantes = Fabricante.query.all()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        contacto = request.form['contacto']
+        localidad = request.form['localidad']
+
+        fabricante_nuevo = Fabricante(
+            nombre = nombre,
+            contacto = contacto,
+            localidad = localidad,
+        )
+        
+        db.session.add(fabricante_nuevo)
+        db.session.commit()
+        return redirect(url_for('fabricantes'))
+    
+    return render_template(
+        'fabricante.html',
+        fabricantes=fabricantes,
+
+    )
+
+
+    
 
 
 @app.route('/modelos', methods=['POST', 'GET'])
