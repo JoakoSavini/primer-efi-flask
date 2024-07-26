@@ -29,6 +29,11 @@
                         <option value="{{categoria.id}}">{{categoria.nombre}}</option>
                     {% endfor %}
                 </select>
+                <select name="categoria" id="" class="form-control mb-2">
+                    {% for categoria in categorias %}
+                        <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                    {% endfor %}
+                </select>
                 <button type="submit" class="btn btn-success">Agregar</button>
             </form>
         </div>
