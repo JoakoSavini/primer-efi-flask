@@ -49,7 +49,7 @@ class Accesorios(db.Model):
 class Fabricante(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
-    contacto = db.Column(db.Integer, nullable=False)
+    contacto = db.Column(db.String(50), nullable=False)
     localidad = db.Column(db.String(50), nullable=False)
 
     def __str__(self) -> str:
@@ -58,8 +58,11 @@ class Fabricante(db.Model):
 class Proveedor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
-    contacto = db.Column(db.Integer, nullable=False)
+    contacto = db.Column(db.String(50), nullable=False)
     localidad = db.Column(db.String(50), nullable=False)
+    fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'))
+    
+    fabricante = db.relationship('Fabricante', backref=db.backref('proveedores', lazy=True))
 
     def __str__(self) -> str:
         return self.nombre

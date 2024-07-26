@@ -92,5 +92,61 @@ def celulares():
         modelos=modelos,
     )
 
+@app.route('/proveedores', methods=['POST', 'GET'])
+def proveedores():
+    proveedores = Proveedor.query.all()
+    fabricantes = Fabricante.query.all()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        contacto = request.form['contacto']
+        localidad = request.form['localidad']
+        fabricante = request.form['fabricante']
+
+        proveedor_nuevo = Proveedor(
+            nombre = nombre,
+            contacto = contacto,
+            localidad = localidad,
+            fabricante_id = fabricante,
+        )
+        
+        db.session.add(proveedor_nuevo)
+        db.session.commit()
+        return redirect(url_for('proveedores'))
+    
+    return render_template(
+        'proveedores.html',
+        fabricantes=fabricantes,
+        proveedores=proveedores
+
+    )
+
+@app.route('/fabricantes', methods=['POST', 'GET'])
+def fabricantes():
+    fabricantes = Fabricante.query.all()
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        contacto = request.form['contacto']
+        localidad = request.form['localidad']
+
+        fabricante_nuevo = Fabricante(
+            nombre = nombre,
+            contacto = contacto,
+            localidad = localidad,
+        )
+        
+        db.session.add(fabricante_nuevo)
+        db.session.commit()
+        return redirect(url_for('fabricantes'))
+    
+    return render_template(
+        'fabricante.html',
+        fabricantes=fabricantes,
+
+    )
+
+
+    
 
 
