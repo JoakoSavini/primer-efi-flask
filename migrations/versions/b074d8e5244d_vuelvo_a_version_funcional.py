@@ -1,16 +1,8 @@
-<<<<<<<< HEAD:migrations/versions/6b651b9dbfb1_primer_migrate.py
-"""primer migrate
+"""vuelvo a version funcional
 
-Revision ID: 6b651b9dbfb1
+Revision ID: b074d8e5244d
 Revises: 
-Create Date: 2024-07-25 21:57:25.997445
-========
-"""corrijo y elimino relaciones
-
-Revision ID: a51efda388fb
-Revises: 
-Create Date: 2024-07-16 12:21:33.146859
->>>>>>>> master:migrations/versions/a51efda388fb_corrijo_y_elimino_relaciones.py
+Create Date: 2024-07-27 18:16:01.996771
 
 """
 from alembic import op
@@ -18,11 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:migrations/versions/6b651b9dbfb1_primer_migrate.py
-revision = '6b651b9dbfb1'
-========
-revision = 'a51efda388fb'
->>>>>>>> master:migrations/versions/a51efda388fb_corrijo_y_elimino_relaciones.py
+revision = 'b074d8e5244d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -50,14 +38,14 @@ def upgrade():
     op.create_table('fabricante',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nombre', sa.String(length=50), nullable=False),
-    sa.Column('contacto', sa.Integer(), nullable=False),
+    sa.Column('contacto', sa.String(length=50), nullable=False),
     sa.Column('localidad', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('proveedor',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nombre', sa.String(length=50), nullable=False),
-    sa.Column('contacto', sa.Integer(), nullable=False),
+    sa.Column('contacto', sa.String(length=50), nullable=False),
     sa.Column('localidad', sa.String(length=50), nullable=False),
     sa.Column('fabricante_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['fabricante_id'], ['fabricante.id'], ),

@@ -16,20 +16,13 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #aqui importo los modelos creados
-from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante, Especificacion
+from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante
 #---
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-<<<<<<< HEAD
-@app.route('/categorias', methods=['GET'])
-def categorias():
-    categorias = Categoria.query.all()
-
-    return render_template('categorias.html', categorias=categorias)
-=======
 @app.route('/categorias', methods=['GET', 'POST'])
 def categorias():
     categorias = Categoria.query.all()  
@@ -45,7 +38,6 @@ def categorias():
         'categorias.html', 
         categorias=categorias,
         )
->>>>>>> master
 
 @app.route('/marcas', methods=['GET', 'POST'])
 def marcas():
@@ -59,14 +51,6 @@ def marcas():
         return redirect(url_for('marcas'))
     return render_template('marcas.html', marcas=marcas)
 
-<<<<<<< HEAD
-@app.route('/precios', methods=['GET'])
-def precios():
-    celulares = Celular.query.all()
-
-    return render_template('precios.html',  celulares=celulares)
-=======
->>>>>>> master
 
 """ @app.route('/modelos', methods=['GET', 'POST'])
 def modelos():
@@ -90,24 +74,12 @@ def celulares():
     if request.method == 'POST':
         modelo = request.form['modelo']
         marca = request.form['marca']
-<<<<<<< HEAD
-        usado = 'usado' in request.form
-        precio = float(request.form['precio'])
-        categoria = request.form['categoria']
-
-        celular_nuevo = Celular(
-            categoria_id=categoria,
-            usado=usado,
-            precio=precio,
-            modelo_id=modelo,
-=======
         categoria = request.form['categoria']
         precio = request.form['precio']
         usado = 'usado' in request.form['usado']
         celular_nuevo = Celular(
             categoria_id=categoria,
             modelo_id=modelo,   
->>>>>>> master
             marca_id=marca,
             precio=precio,
             usado=usado,
@@ -122,7 +94,6 @@ def celulares():
         celulares=celulares,
         marcas=marcas,
         modelos=modelos,
-        categorias=categorias
     )
 
 @app.route('/proveedores', methods=['POST', 'GET'])
@@ -227,48 +198,4 @@ def accesorios():
         accesorios=accesorios
     )
 
-@app.route('/proveedores', methods=['POST', 'GET'])
-def proveedores():
-    proveedores = Proveedor.query.all() #obtengo los proveedores
-    
-    if request.method == 'POST':
-        #obtengo datos del form
-        nombre = request.form['nombre']
-        localidad = request.form['localidad']
-        contacto = request.form['contacto']
-        #creo el objeto
-        nuevo_proveedor = Proveedor(
-            nombre=nombre,
-            contacto=contacto,
-            localidad=localidad
-        )
-        db.session.add(nuevo_proveedor) #lo añado
-        db.session.commit() #hago commit
-        return redirect(url_for('proveedores')) #recargo la pagina
-            
-    return render_template(
-        'proveedores.html',
-        proveedores=proveedores)
 
-@app.route('/fabricantes', methods=['POST', 'GET'])
-def fabricantes():
-    fabricantes = Fabricante.query.all() #obtengo los fabricantes
-    
-    if request.method == 'POST':
-        #obtengo los datos del form
-        nombre = request.form['nombre']
-        localidad = request.form['localidad']
-        contacto = request.form['contacto']
-        #creo el objeto
-        nuevo_fabricante = Fabricante(
-            nombre=nombre,
-            contacto=contacto,
-            localidad=localidad
-        )
-        db.session.add(nuevo_fabricante) #lo añado 
-        db.session.commit() #hago commit
-        return redirect(url_for('fabricantes'))
-        
-    return render_template(
-        'fabricantes.html',
-        fabricantes=fabricantes)
