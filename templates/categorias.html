@@ -5,7 +5,26 @@
 {% endblock%}
 
 {%block content%}
-<h4>Listado por Gamma</h4>
-
-<h4>Listado por Sistema Operativo</h4>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Gamas</h2>
+        <ul class="list-group">
+            {% for gama in gamas %}
+                <li class="list-group-item">
+                    <a href="{{ url_for('celulares_por_gama', gama_id=gama.id) }}">{{ gama.nombre }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h2>Sistemas Operativos</h2>
+        <ul class="list-group">
+            {% for so in sistemas_operativos %}
+                <li class="list-group-item">
+                    <a href="{{ url_for('celulares_por_so', so_id=so.id) }}">{{ so.nombre }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

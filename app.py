@@ -19,6 +19,26 @@ migrate = Migrate(app, db)
 from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante, Gama, SistemaOperativo
 #---
 
+#cargo datos iniciales en gamma y SO
+def cargar_datos_iniciales():
+    gamas = ['Baja', 'Media', 'Alta']
+    sistemas_operativos = ['iOS', 'Android']
+
+    for nombre in gamas:
+        if not Gama.query.filter_by(nombre=nombre).first():
+            gama = Gama(nombre=nombre)
+            db.session.add(gama)
+
+    for nombre in sistemas_operativos:
+        if not SistemaOperativo.query.filter_by(nombre=nombre).first():
+            so = SistemaOperativo(nombre=nombre)
+            db.session.add(so)
+
+    db.session.commit()
+
+#--
+
+#RUTAS PARA AGREGAR Y VER DATOS EXISTENTES
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -29,16 +49,18 @@ def categorias():
     gammas = Gama.query.all()
     sistema_operativo = SistemaOperativo.query.all()  
     
-    if request.method == 'POST':
+    """ if request.method == 'POST':
         nombre = request.form['nombre']
         nueva_categoria = Categoria(nombre=nombre)
         db.session.add(nueva_categoria)
         db.session.commit()
-        return redirect(url_for('categorias'))
+        return redirect(url_for('categorias')) """
         
     return render_template(
         'categorias.html', 
         categorias=categorias,
+        gamas=gammas,
+        sistemas_operativos=sistema_operativo
         )
 
 @app.route('/marcas', methods=['GET', 'POST'])
@@ -51,20 +73,10 @@ def marcas():
         db.session.add(nueva_marca)
         db.session.commit()
         return redirect(url_for('marcas'))
-    return render_template('marcas.html', marcas=marcas)
-
-
-""" @app.route('/modelos', methods=['GET', 'POST'])
-def modelos():
-    modelos = Modelo.query.all()
-
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        nuevo_modelo = Modelo(nombre=nombre)
-        db.session.add(nuevo_modelo)
-        db.session.commit()
-        return redirect(url_for('modelos'))
-    return render_template('modelos.html', modelos=modelos) """
+    
+    return render_template(
+        'marcas.html', 
+        marcas=marcas)
 
 @app.route('/celulares', methods=['POST', 'GET'])
 def celulares():
@@ -82,7 +94,7 @@ def celulares():
         precio = request.form['precio']
         usado = 'usado' in request.form['usado']
         gamma = request.form['gamma']
-        sistema_op = request.form['sistema_operativo']
+        sistema_op = request.form['sistema_op']
         celular_nuevo = Celular(
             categoria_id=categoria,
             modelo_id=modelo,   
@@ -157,12 +169,7 @@ def fabricantes():
     return render_template(
         'fabricante.html',
         fabricantes=fabricantes,
-
     )
-
-
-    
-
 
 @app.route('/modelos', methods=['POST', 'GET'])
 def modelos():
@@ -208,4 +215,23 @@ def accesorios():
         accesorios=accesorios
     )
 
+#RUTAS PARA FILTRAR O EDITAR DATOS
+@app.route('/gamas/<int:gama_id>', methods=['GET'])
+def celulares_por_gama(gama_id):
+    gama = Gama.query.get_or_404(gama_id)
+    celulares = Celular.query.filter_by(gama_id=gama_id).all()
+    return render_template('celulares_por_gama.html', gama=gama, celulares=celulares)
 
+@app.route('/sistemas-operativos/<int:so_id>', methods=['GET'])
+def celulares_por_so(so_id):
+    so = SistemaOperativo.query.get_or_404(so_id)
+    celulares = Celular.query.filter_by(sistema_operativo_id=so_id).all()
+    return render_template('celulares_por_so.html', so=so, celulares=celulares)
+
+#FUNCION DE CARGA DE DATOS
+with app.app_context():
+    db.create_all()
+    cargar_datos_iniciales()
+
+if __name__ == '__main__':
+    app.run(debug=True)

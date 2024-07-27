@@ -29,13 +29,13 @@
                 </select>
                 <h6>Categoria/Gamma</h6>
                 <select name="gamma" id="" class="form-control mb-2">
-                    {% for gamma in gammas %}
-                        <option value="{{gamma.id}}">{{gamma.nombre}}</option>
+                    {% for gama in gamma %}
+                        <option value="{{gama.id}}">{{gama.nombre}}</option>
                     {% endfor %}
                 </select>
                 <h6>Sistema Operativo</h6>
-                <select name="sistema_operativo" id="" class="form-control mb-2">
-                    {% for sistema in sistema_operativo %}
+                <select name="sistema_op" id="" class="form-control mb-2">
+                    {% for sistema in sistema_op %}
                         <option value="{{sistema.id}}">{{sistema.nombre}}</option>
                     {% endfor %}
                 </select>
