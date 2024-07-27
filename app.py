@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #aqui importo los modelos creados
-from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante
+from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante, Gama, SistemaOperativo
 #---
 
 @app.route('/')
@@ -25,7 +25,9 @@ def index():
 
 @app.route('/categorias', methods=['GET', 'POST'])
 def categorias():
-    categorias = Categoria.query.all()  
+    categorias = Categoria.query.all()
+    gammas = Gama.query.all()
+    sistema_operativo = SistemaOperativo.query.all()  
     
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -70,6 +72,8 @@ def celulares():
     marcas = Marca.query.all()
     modelos = Modelo.query.all()
     categorias = Categoria.query.all()
+    gamma = Gama.query.all()
+    sistema_op = SistemaOperativo.query.all()
 
     if request.method == 'POST':
         modelo = request.form['modelo']
@@ -77,12 +81,16 @@ def celulares():
         categoria = request.form['categoria']
         precio = request.form['precio']
         usado = 'usado' in request.form['usado']
+        gamma = request.form['gamma']
+        sistema_op = request.form['sistema_operativo']
         celular_nuevo = Celular(
             categoria_id=categoria,
             modelo_id=modelo,   
             marca_id=marca,
             precio=precio,
             usado=usado,
+            gama_id=gamma,
+            sistema_operativo_id=sistema_op,
         )
         db.session.add(celular_nuevo)
         db.session.commit()
@@ -94,6 +102,8 @@ def celulares():
         celulares=celulares,
         marcas=marcas,
         modelos=modelos,
+        gamma=gamma,
+        sistema_op=sistema_op
     )
 
 @app.route('/proveedores', methods=['POST', 'GET'])
