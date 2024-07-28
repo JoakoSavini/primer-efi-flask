@@ -20,11 +20,21 @@ class Celular(db.Model):
     marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'))
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'))
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'))
+    gama_id = db.Column(db.Integer, db.ForeignKey('gama.id'), nullable=False)
+    sistema_operativo_id = db.Column(db.Integer, db.ForeignKey('sistema_operativo.id'), nullable=False)
 
-    categoria = db.relationship('Categoria', backref=db.backref('celulares', lazy=True))
-    marca = db.relationship('Marca', backref=db.backref('celulares', lazy=True))
-    modelo = db.relationship('Modelo', backref=db.backref('celulares', lazy=True))
 
+    categoria = db.relationship('Categoria', backref=db.backref('categoria_celulares', lazy=True))
+    marca = db.relationship('Marca', backref=db.backref('marca_celulares', lazy=True))
+    modelo = db.relationship('Modelo', backref=db.backref('modelo_celulares', lazy=True))
+
+class Especificacion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ram = db.Column(db.Integer, nullable=False)
+    almacenamiento = db.Column(db.Integer, nullable=False)
+    
+    def __str__(self) -> str:
+        return f'Especificacion {self.id}'
 
 
 class Marca(db.Model):
@@ -74,7 +84,19 @@ class Accesorio(db.Model):
 
     def __str__(self) -> str:
         return self.nombre
+
+class Gama(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
     
+    celulares = db.relationship('Celular', backref='celular_gama', lazy=True)
+
+class SistemaOperativo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    
+    celulares = db.relationship('Celular', backref='celular_sistema_operativo', lazy=True)
+
 class Fabricante(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
@@ -96,7 +118,7 @@ class Proveedor(db.Model):
     localidad = db.Column(db.String(50), nullable=False)
     fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'))
     
-    fabricante = db.relationship('Fabricante', backref=db.backref('proveedores', lazy=True))
+    fabricante = db.relationship('Fabricante', backref=db.backref('fabricante_proveedores', lazy=True))
 
     def __str__(self) -> str:
         return self.nombre

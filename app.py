@@ -16,36 +16,52 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #aqui importo los modelos creados
-from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante, Especificacion
+from modelos import Celular, Marca, Modelo, Accesorio, Categoria, Proveedor, Fabricante, Gama, SistemaOperativo
 #---
 
+#cargo datos iniciales en gamma y SO
+def cargar_datos_iniciales():
+    gamas = ['Baja', 'Media', 'Alta']
+    sistemas_operativos = ['iOS', 'Android']
+
+    for nombre in gamas:
+        if not Gama.query.filter_by(nombre=nombre).first():
+            gama = Gama(nombre=nombre)
+            db.session.add(gama)
+
+    for nombre in sistemas_operativos:
+        if not SistemaOperativo.query.filter_by(nombre=nombre).first():
+            so = SistemaOperativo(nombre=nombre)
+            db.session.add(so)
+
+    db.session.commit()
+
+#--
+
+#RUTAS PARA AGREGAR Y VER DATOS EXISTENTES
 @app.route('/')
 def index():
     return render_template('index.html')
 
-<<<<<<< HEAD
-@app.route('/categorias', methods=['GET'])
-def categorias():
-    categorias = Categoria.query.all()
-
-    return render_template('categorias.html', categorias=categorias)
-=======
 @app.route('/categorias', methods=['GET', 'POST'])
 def categorias():
-    categorias = Categoria.query.all()  
+    categorias = Categoria.query.all()
+    gammas = Gama.query.all()
+    sistema_operativo = SistemaOperativo.query.all()  
     
-    if request.method == 'POST':
+    """ if request.method == 'POST':
         nombre = request.form['nombre']
         nueva_categoria = Categoria(nombre=nombre)
         db.session.add(nueva_categoria)
         db.session.commit()
-        return redirect(url_for('categorias'))
+        return redirect(url_for('categorias')) """
         
     return render_template(
         'categorias.html', 
         categorias=categorias,
+        gamas=gammas,
+        sistemas_operativos=sistema_operativo
         )
->>>>>>> master
 
 @app.route('/marcas', methods=['GET', 'POST'])
 def marcas():
@@ -57,28 +73,10 @@ def marcas():
         db.session.add(nueva_marca)
         db.session.commit()
         return redirect(url_for('marcas'))
-    return render_template('marcas.html', marcas=marcas)
-
-<<<<<<< HEAD
-@app.route('/precios', methods=['GET'])
-def precios():
-    celulares = Celular.query.all()
-
-    return render_template('precios.html',  celulares=celulares)
-=======
->>>>>>> master
-
-""" @app.route('/modelos', methods=['GET', 'POST'])
-def modelos():
-    modelos = Modelo.query.all()
-
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        nuevo_modelo = Modelo(nombre=nombre)
-        db.session.add(nuevo_modelo)
-        db.session.commit()
-        return redirect(url_for('modelos'))
-    return render_template('modelos.html', modelos=modelos) """
+    
+    return render_template(
+        'marcas.html', 
+        marcas=marcas)
 
 @app.route('/celulares', methods=['POST', 'GET'])
 def celulares():
@@ -86,31 +84,25 @@ def celulares():
     marcas = Marca.query.all()
     modelos = Modelo.query.all()
     categorias = Categoria.query.all()
+    gamma = Gama.query.all()
+    sistema_op = SistemaOperativo.query.all()
 
     if request.method == 'POST':
         modelo = request.form['modelo']
         marca = request.form['marca']
-<<<<<<< HEAD
-        usado = 'usado' in request.form
-        precio = float(request.form['precio'])
-        categoria = request.form['categoria']
-
-        celular_nuevo = Celular(
-            categoria_id=categoria,
-            usado=usado,
-            precio=precio,
-            modelo_id=modelo,
-=======
         categoria = request.form['categoria']
         precio = request.form['precio']
         usado = 'usado' in request.form['usado']
+        gamma = request.form['gamma']
+        sistema_op = request.form['sistema_op']
         celular_nuevo = Celular(
             categoria_id=categoria,
             modelo_id=modelo,   
->>>>>>> master
             marca_id=marca,
             precio=precio,
             usado=usado,
+            gama_id=gamma,
+            sistema_operativo_id=sistema_op,
         )
         db.session.add(celular_nuevo)
         db.session.commit()
@@ -122,7 +114,8 @@ def celulares():
         celulares=celulares,
         marcas=marcas,
         modelos=modelos,
-        categorias=categorias
+        gamma=gamma,
+        sistema_op=sistema_op
     )
 
 @app.route('/proveedores', methods=['POST', 'GET'])
@@ -176,12 +169,7 @@ def fabricantes():
     return render_template(
         'fabricante.html',
         fabricantes=fabricantes,
-
     )
-
-
-    
-
 
 @app.route('/modelos', methods=['POST', 'GET'])
 def modelos():
@@ -227,48 +215,23 @@ def accesorios():
         accesorios=accesorios
     )
 
-@app.route('/proveedores', methods=['POST', 'GET'])
-def proveedores():
-    proveedores = Proveedor.query.all() #obtengo los proveedores
-    
-    if request.method == 'POST':
-        #obtengo datos del form
-        nombre = request.form['nombre']
-        localidad = request.form['localidad']
-        contacto = request.form['contacto']
-        #creo el objeto
-        nuevo_proveedor = Proveedor(
-            nombre=nombre,
-            contacto=contacto,
-            localidad=localidad
-        )
-        db.session.add(nuevo_proveedor) #lo añado
-        db.session.commit() #hago commit
-        return redirect(url_for('proveedores')) #recargo la pagina
-            
-    return render_template(
-        'proveedores.html',
-        proveedores=proveedores)
+#RUTAS PARA FILTRAR O EDITAR DATOS
+@app.route('/gamas/<int:gama_id>', methods=['GET'])
+def celulares_por_gama(gama_id):
+    gama = Gama.query.get_or_404(gama_id)
+    celulares = Celular.query.filter_by(gama_id=gama_id).all()
+    return render_template('celulares_por_gama.html', gama=gama, celulares=celulares)
 
-@app.route('/fabricantes', methods=['POST', 'GET'])
-def fabricantes():
-    fabricantes = Fabricante.query.all() #obtengo los fabricantes
-    
-    if request.method == 'POST':
-        #obtengo los datos del form
-        nombre = request.form['nombre']
-        localidad = request.form['localidad']
-        contacto = request.form['contacto']
-        #creo el objeto
-        nuevo_fabricante = Fabricante(
-            nombre=nombre,
-            contacto=contacto,
-            localidad=localidad
-        )
-        db.session.add(nuevo_fabricante) #lo añado 
-        db.session.commit() #hago commit
-        return redirect(url_for('fabricantes'))
-        
-    return render_template(
-        'fabricantes.html',
-        fabricantes=fabricantes)
+@app.route('/sistemas-operativos/<int:so_id>', methods=['GET'])
+def celulares_por_so(so_id):
+    so = SistemaOperativo.query.get_or_404(so_id)
+    celulares = Celular.query.filter_by(sistema_operativo_id=so_id).all()
+    return render_template('celulares_por_so.html', so=so, celulares=celulares)
+
+#FUNCION DE CARGA DE DATOS
+with app.app_context():
+    db.create_all()
+    cargar_datos_iniciales()
+
+if __name__ == '__main__':
+    app.run(debug=True)

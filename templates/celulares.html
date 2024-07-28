@@ -13,25 +13,30 @@
                     <input type="checkbox" name="usado" class="form-ckeck-input mb-2" id="usadoCheckbox">
                     <label class="form-check-label" for="usadoCheckbox">Usado?</label>
                 </div>
+                <h6>Precio</h6>
                 <input type="number" name="precio" class="form-control mb-2" placeholder="Precio">
+                <h6>Marca</h6>
                 <select name="marca" id="" class="form-control mb-2">
                     {% for marca in marcas %}
                         <option value="{{marca.id}}">{{marca.nombre}}</option>
                     {% endfor %}
                 </select>
+                <h6>Modelo</h6>
                 <select name="modelo" id="" class="form-control mb-2">
                     {% for modelo in modelos %}
                         <option value="{{modelo.id}}">{{modelo.nombre}}</option>
                     {% endfor %}
                 </select>
-                <select name="categoria" id="" class="form-control mb-2">
-                    {% for categoria in categorias %}
-                        <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                <h6>Categoria/Gamma</h6>
+                <select name="gamma" id="" class="form-control mb-2">
+                    {% for gama in gamma %}
+                        <option value="{{gama.id}}">{{gama.nombre}}</option>
                     {% endfor %}
                 </select>
-                <select name="categoria" id="" class="form-control mb-2">
-                    {% for categoria in categorias %}
-                        <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                <h6>Sistema Operativo</h6>
+                <select name="sistema_op" id="" class="form-control mb-2">
+                    {% for sistema in sistema_op %}
+                        <option value="{{sistema.id}}">{{sistema.nombre}}</option>
                     {% endfor %}
                 </select>
                 <button type="submit" class="btn btn-success">Agregar</button>
