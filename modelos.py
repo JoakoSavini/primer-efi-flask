@@ -47,6 +47,7 @@ class Marca(db.Model):
     fabricante = db.relationship('Fabricante', backref=db.backref('fabricante_marcas', lazy=True))
     proveedor = db.relationship('Proveedor', backref=db.backref('proveedor_marcas', lazy=True))
     
+    
 
     def __str__(self) -> str:
         return self.nombre

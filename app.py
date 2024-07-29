@@ -228,6 +228,7 @@ def celulares_por_so(so_id):
     celulares = Celular.query.filter_by(sistema_operativo_id=so_id).all()
     return render_template('celulares_por_so.html', so=so, celulares=celulares)
 
+
 #FUNCION DE CARGA DE DATOS
 with app.app_context():
     db.create_all()
