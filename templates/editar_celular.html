@@ -1,0 +1,57 @@
+{% extends 'base_template.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="contenedor_general">
+        <h1>Editar Celular: {{ celular.modelo.nombre }}</h1>
+        <form method="POST">
+            <label for="modelo">Modelo:</label>
+            <select id="modelo" name="modelo" class="form-control mb-2">
+                {% for modelo in modelos %}
+                    <option value="{{ modelo.id }}" {% if modelo.id == celular.modelo_id %}selected{% endif %}>{{ modelo.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="gama">Gama:</label>
+            <select id="gama" name="gama" class="form-control mb-2">
+                {% for gama in gamas %}
+                    <option value="{{ gama.id }}" {% if gama.id == celular.gama_id %}selected{% endif %}>{{ gama.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="sistema">Sistema Operativo:</label>
+            <select id="sistema" name="sistema" class="form-control mb-2">
+                {% for sistema in sistemas_operativos %}
+                    <option value="{{ sistema.id }}" {% if sistema.id == celular.sistema_operativo_id %}selected{% endif %}>{{ sistema.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="especificacion">Especificación:</label>
+            <select id="especificacion" name="especificacion" class="form-control mb-2">
+                {% for especificacion in especificaciones %}
+                    <option value="{{ especificacion.id }}" {% if especificacion.id == celular.especificacion_id %}selected{% endif %}>RAM: {{ especificacion.ram }} GB / Almacenamiento: {{ especificacion.almacenamiento }} GB</option>
+                {% endfor %}
+            </select>
+
+            <label for="proveedor">Proveedor:</label>
+            <select id="proveedor" name="proveedor" class="form-control mb-2">
+                {% for proveedor in proveedores %}
+                    <option value="{{ proveedor.id }}" {% if proveedor.id == celular.proveedor_id %}selected{% endif %}>{{ proveedor.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="form-check mb-2">
+                <label for="usado">Usado:</label>
+            <input type="checkbox" id="usado" name="usado" {% if celular.usado %}checked{% endif %}>
+            </div>
+            
+
+            <label for="precio">Precio:</label>
+            <input type="number" id="precio" name="precio" class="form-control mb-2" value="{{ celular.precio }}">
+
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        </form>
+        <a href="{{ url_for('celulares_por_marca', id=celular.modelo.marca_id) }}">Cancelar</a>
+    </div>
+</div>
+{% endblock %}

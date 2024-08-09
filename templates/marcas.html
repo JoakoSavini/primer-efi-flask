@@ -1,26 +1,30 @@
-{% extends "template_base.html" %}
+{% extends 'base_template.html' %}
 
 {% block title %}
-    Marcas
+    Agregar Marcas
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-6">
+    <div class="container">
+        
+
+        <div class="contenedor_general">
             <h4>Agregar Marca</h4>
             <form action="" method="post">
-                <h6>Nombre de la Marca</h6>
-                <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre">
+                <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre de la Marca">
                 <button type="submit" class="btn btn-success">Agregar</button>
             </form>
         </div>
-        <div class="col-6">
+        <div class="contenedor_general">
             <h4>Listado de Marcas</h4>
             {% for marca in marcas %}
-                <li>{{marca.nombre}}</li>
+                <ul>
+                    <li>
+                        {{ marca.nombre }}
+                    </li><span><a href="{{ url_for('editar_marcas', id=marca.id) }}">Editar</a><a href="{{ url_for('borrar_marcas', id=marca.id) }}">Borrar</a></span>
+                </ul>
             {% endfor %}
         </div>
+    
     </div>
-</div>
 {% endblock %}

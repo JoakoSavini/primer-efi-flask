@@ -1,0 +1,24 @@
+{% extends 'base_template.html' %}
+
+{% block title %}
+    Editar Modelos
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="contenedor_general">
+        <h4>Editar el Modelo</h4>
+        <form action="" method="post">
+            <h6>Editar Nombre del modelo</h6>
+            <input type="text" name="nombre" class="form-control mb-2" value="{{modelo.nombre}}">
+            <h6>Cambiar Marca</h6>
+            <select id="marca" name="marca" class="form-control mb-2">
+                {% for marca in marcas %}
+                    <option value="{{ marca.id }}" {% if marca.id == modelo.marca_id %}selected{% endif %}>{{ marca.nombre }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,13 +1,12 @@
-{% extends 'template_base.html' %}
+{% extends 'base_template.html' %}
 
 {% block title %}
     Modelos
 {% endblock %}
 
-{% block content %}
+{% block content %} 
 <div class="container">
-    <div class="row">
-        <div class="col-6">
+        <div class="contenedor_general">
             <h4>Agregar Modelo</h4>
             <form action="" method="post">
                 <h6>Nombre del modelo</h6>
@@ -21,12 +20,19 @@
                 <button type="submit" class="btn btn-success">Agregar</button>
             </form>
         </div>
-        <div class="col-6">
+        <div class="contenedor_general">
             <h4>Listado de Modelos</h4>
-            {% for modelo in modelos %}
-            <li>{{modelo.nombre}}</li>
+            {% for marca in marcas %}
+                <h6>{{marca.nombre}}</h6>
+                {% for modelo in modelos %}
+                    {% if modelo.marca.id == marca.id %}
+                        <ul>
+                            <li>{{modelo.nombre}}</li><span><a href="{{ url_for('editar_modelos', id=modelo.id) }}">Editar</a><a href="{{ url_for('borrar_modelos', id=modelo.id) }}">Borrar</a></span>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
+            
         </div>
-    </div>
 </div>
 {% endblock %}

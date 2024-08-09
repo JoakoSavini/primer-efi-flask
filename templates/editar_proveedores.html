@@ -1,0 +1,28 @@
+{% extends 'base_template.html' %}
+
+{% block title %}
+    Editar Proveedores
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="contenedor_general">
+        <h4>Editar el Proveedor</h4>
+        <form action="" method="post">
+            <label for="nombre">Editar Nombre del Proveedor</label>
+            <input type="text" id="nombre" name="nombre" class="form-control mb-2" value="{{proveedor.nombre}}">
+            <label for="contacto">Editar Contacto</label>
+            <input type="text" id="contacto" name="contacto" class="form-control mb-2" value="{{proveedor.contacto}}">
+            <label for="localidad">Cambiar Localidad</label>
+            <input type="text" id="localidad" name="localidad" class="form-control mb-2" value="{{proveedor.localidad}}">
+            <label for="fabricante">Cambiar Fabricante</label>
+            <select id="fabricante" name="fabricante" class="form-control mb-2">
+                {% for fabricante in fabricantes %}
+                    <option value="{{ fabricante.id }}" {% if fabricante.id == proveedor.fabricante_id %}selected{% endif %}>{{ fabricante.nombre }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

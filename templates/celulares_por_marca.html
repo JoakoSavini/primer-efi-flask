@@ -1,0 +1,24 @@
+{% extends 'base_template.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="contenedor_general">
+            <h1>Celulares de la marca {{ marca.nombre }}</h1>
+            <ul>
+                {% for celular in celulares %}
+                    <h6><strong>{{celular.modelo}}</strong></h6>
+                    <ul>
+                        <li><strong>Gamma: </strong>{{celular.gama}}</li>
+                        <li><strong>Sistema Operativo: </strong>{{celular.sistema}}</li>
+                        <li><strong>Especificaciones: </strong>{{celular.especificaciones.ram}}GbRam/{{celular.especificaciones.almacenamiento}}GbAlmacenamiento</li>
+                        <li><strong>Usado: </strong>{% if celular.usado %}<span>✅</span>{% else %}<span>❎</span>{% endif %}</li>
+                        <li><strong>Precio: </strong>💲{{celular.precio}}</li>
+                        <li><strong>Proveedor: </strong>{{celular.proveedor}} - {{celular.proveedor.contacto}} - Fabricante: {{celular.proveedor.fabricante}}</li>
+                    </ul>
+                    <h5><a href="{{ url_for('editar_celular', id=celular.id) }}">Editar</a><a href="{{ url_for('eliminar_celular', id=celular.id) }}">Borrar</a></h5>
+                {% endfor %}
+            </ul>
+            <a href="{{ url_for('celulares') }}">Volver Atras</a>
+        </div>
+    </div>
+{% endblock %}

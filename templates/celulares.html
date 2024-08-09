@@ -1,55 +1,79 @@
-{% extends "template_base.html" %}
+{% extends "base_template.html" %}
 
 {% block title %}Agregar Celular{% endblock %}
 
+{% block style %}
+    <style>
+        h5{
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        h6{
+            text-decoration: underline;
+        }
+
+    </style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="row">
+    <div class="container">
 
-        <div class="col-6">
-            <h4>Agrega un Celular</h4>
-            <form action="" method="post">
-                <div class="form-check mb2">
-                    <input type="checkbox" name="usado" class="form-ckeck-input mb-2" id="usadoCheckbox">
-                    <label class="form-check-label" for="usadoCheckbox">Usado?</label>
-                </div>
-                <h6>Precio</h6>
-                <input type="number" name="precio" class="form-control mb-2" placeholder="Precio">
-                <h6>Marca</h6>
-                <select name="marca" id="" class="form-control mb-2">
-                    {% for marca in marcas %}
-                        <option value="{{marca.id}}">{{marca.nombre}}</option>
-                    {% endfor %}
-                </select>
-                <h6>Modelo</h6>
-                <select name="modelo" id="" class="form-control mb-2">
-                    {% for modelo in modelos %}
-                        <option value="{{modelo.id}}">{{modelo.nombre}}</option>
-                    {% endfor %}
-                </select>
-                <h6>Categoria/Gamma</h6>
-                <select name="gamma" id="" class="form-control mb-2">
-                    {% for gama in gamma %}
-                        <option value="{{gama.id}}">{{gama.nombre}}</option>
-                    {% endfor %}
-                </select>
-                <h6>Sistema Operativo</h6>
-                <select name="sistema_op" id="" class="form-control mb-2">
-                    {% for sistema in sistema_op %}
-                        <option value="{{sistema.id}}">{{sistema.nombre}}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit" class="btn btn-success">Agregar</button>
-            </form>
-        </div>
+            <div class="contenedor_general">
+                <h4>Agrega un Celular</h4>
+                <form action="" method="post">
+                    <div class="form-check mb-2">
+                        <input type="checkbox" name="usado" class="form-check-input mb-2" id="usadoCheckbox">
+                        <label class="form-check-label" for="usadoCheckbox">Usado?</label>
+                    </div>
+                    <h6>Precio</h6>
+                    <input type="number" name="precio" class="form-control mb-2" placeholder="Precio">
+                    <h6>Marca</h6>
+                    <select name="marca" id="" class="form-control mb-2">
+                        {% for marca in marcas %}
+                            <option value="{{marca.id}}">{{marca.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                    <h6>Modelo</h6>
+                    <select name="modelo" id="" class="form-control mb-2">
+                        {% for modelo in modelos %}
+                            <option value="{{modelo.id}}">{{modelo.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                    <h6>Categoria/Gamma</h6>
+                    <select name="gama" id="" class="form-control mb-2">
+                        {% for gama in gamas %}
+                            <option value="{{gama.id}}">{{gama.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                    <h6>Sistema Operativo</h6>
+                    <select name="sistema" id="" class="form-control mb-2">
+                        {% for sistema in sistema_operativo %}
+                            <option value="{{sistema.id}}">{{sistema.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="especificacion_id">Especificaciones</label>
+                    <select name="especificacion" id="especificacion_id" class="form-control mb-2">
+                        {% for especificacion in especificaciones %}
+                            <option value="{{especificacion.id}}">{{especificacion.ram}}GB - Ram/{{especificacion.almacenamiento}}GB - Almacenamiento</option>
+                        {% endfor %}
+                    </select>
+                    <label for="proveedor_id">Proveedor</label>
+                    <select name="proveedor" id="proveedor_id" class="form-control mb-2">
+                        {% for proveedor in proveedores %}
+                            <option value="{{proveedor.id}}">Proveedor: {{proveedor.nombre}} - Fabricante: {{proveedor.fabricante.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-success">Agregar</button>
+                </form>
+            </div>
 
-        <div class="col-6">
-            <h4>Listado de Celulares</h4>
-            {% for celular in celulares %}
-            <li> {{celular.marca}} - {{celular.modelo}} - {{celular.usado}} - {{celular.precio}} - {{celular.categoria}}</li>
-            {% endfor %}
-        </div>
-    
+            <div class="contenedor_general">
+                <h4>Listado de Celulares</h4>
+                {% for marca in marcas %}
+                    <h5><a href="{{ url_for('celulares_por_marca', id=marca.id) }}">{{ marca.nombre }}</a></h5>
+                {% endfor %}
+            </div>
+        
     </div>
-</div>
 {% endblock %}

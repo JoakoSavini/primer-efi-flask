@@ -1,0 +1,31 @@
+
+
+nav {
+    background-color: rgba(60, 60, 60, 0.5);
+    margin-bottom: 4em;
+}
+
+.col-5 {
+    border: solid 2px rgba(60, 60, 60, 0.5);
+}
+
+.container {
+    display: flex;
+    gap: 2em;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.contenedor_general{
+    border: solid 2px rgba(60, 60, 60, 0.5);
+    width: 50vw;
+    padding: 2em;
+    border-radius: 1.5em;
+}
+
+a {
+    padding: 10px;
+    background-color: red;
+}
+
