@@ -1,12 +1,12 @@
-#TRABAJO EFI FLASK
+# TRABAJO EFI FLASK
 
-###¿Qué debemos mostrar?
+### ¿Qué debemos mostrar?
 Un sistema para un local de venta de celulares, donde se puedan cargar, editar y borrar marcas, modelos, proveedores, entre otros.
 
-###¿Qué funcionalidades debe tener?
+### ¿Qué funcionalidades debe tener?
 CRUD (Create, Read, Update, Delete)
 
-###¿Cuantos modelos debemos usar?
+### ¿Cuantos modelos debemos usar?
 Al menos 8
 
 #Instalaciones o Requisitos de Funcionamiento
