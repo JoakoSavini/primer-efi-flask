@@ -9,7 +9,7 @@ CRUD (Create, Read, Update, Delete)
 ### ¿Cuantos modelos debemos usar?
 Al menos 8
 
-#Instalaciones o Requisitos de Funcionamiento
+# Instalaciones o Requisitos de Funcionamiento
 - Se debe contar con Flask, Flask SQLAlchemy, Flask Migrate y PyMySQL:
     Pip install Flask Flask-SQLAlchemy Flask-Migrate  PyMySQL
 - Se debe crear un entorno virtual, de preferencia llamado "ent" para que lo tome el .gitignore en caso de cambios en el codigo
