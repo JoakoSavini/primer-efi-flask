@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import click
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -17,6 +18,49 @@ migrate = Migrate(app, db)
 
 #Importamos los modelos
 from models import Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular
+
+
+def precargar_datos():
+    try:
+        especificaciones = [
+            Especificacion(ram="2", almacenamiento="16"),
+            Especificacion(ram="2", almacenamiento="32"),
+            Especificacion(ram="4", almacenamiento="32"),
+            Especificacion(ram="4", almacenamiento="64"),
+            Especificacion(ram="6", almacenamiento="64"),
+            Especificacion(ram="6", almacenamiento="128"),
+            Especificacion(ram="8", almacenamiento="128"),
+            Especificacion(ram="8", almacenamiento="256"),
+        ]
+
+        gamas = [
+            Gama(nombre="Gama Alta"),
+            Gama(nombre="Gama Media"),
+            Gama(nombre="Gama Baja")
+        ]
+
+        sistemas_operativos = [
+            SistemaOperativo(nombre="Android"),
+            SistemaOperativo(nombre="IOS")
+        ]
+
+        db.session.add_all(sistemas_operativos)
+        db.session.add_all(gamas)
+        db.session.add_all(especificaciones)
+        db.session.commit()
+        print("Datos precargados exitosamente.")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error al precargar datos: {e}")
+
+@app.cli.command('init-db')
+def init_db():
+    with app.app_context():
+        db.create_all()
+        # Llamo a la funcion de precarga de datos.
+        precargar_datos()
+        print("Database initialized and data preloaded.")
+
 
 @app.route('/')  #Definicion de ruta
 def index(): #(en este caso Index)
@@ -289,7 +333,6 @@ def borrar_proveedores(id):
 
 
 
-    
 
 
 
