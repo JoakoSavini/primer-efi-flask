@@ -18,8 +18,8 @@ __Para un correcto funcionamiento del codigo se debe:__
 
 ### Manual de Uso
 __Para que el sistema funcione se debe respetar el siguiente orden de carga:__
-1- Marca
-2- Modelo
-3- Fabricante
-4- Proveedor
-5- Celular
+- 1- Marca
+- 2- Modelo
+- 3- Fabricante
+- 4- Proveedor
+- 5- Celular
