@@ -11,8 +11,10 @@
         <div class="contenedor_general">
             <h4>Agregar Marca</h4>
             <form action="" method="post">
-                <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre de la Marca">
-                <button type="submit" class="btn btn-success">Agregar</button>
+                {{ formulario.hidden_tag() }}
+                {{formulario.nombre.label }}
+                {{ formulario.nombre }}
+                {{ formulario.submit }}
             </form>
         </div>
         <div class="contenedor_general">

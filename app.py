@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -5,7 +6,7 @@ import click
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-
+app.config['SECRET_KEY'] = os.urandom(24) #creo una key aleatoria de 24 elementos
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 #Configuracion de la base de datos
@@ -18,7 +19,7 @@ migrate = Migrate(app, db)
 
 #Importamos los modelos
 from models import Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular
-
+from forms import *
 
 def precargar_datos():
     try:
@@ -69,17 +70,18 @@ def index(): #(en este caso Index)
 @app.route('/marcas', methods=['GET', 'POST']) #A la ruta le pasamos los metodos POST y GET.
 def marcas():
     marcas = Marca.query.all() #Tomamos lo que haya en el modelo Marca y creamos como una 'lista'.
-
+    formulario = MarcaForm() #tomo el formulario y lo instancio
+    
     if request.method == 'POST': #Si el metodo es POST
-        nombre = request.form['nombre'] #Almacenamos lo obtenido del form en una variable.
-        nueva_marca = Marca(            
-            nombre=nombre               #Agregamos el nombre al modelo.
-        )
+        nueva_marca = Marca(nombre=formulario.nombre.data)
         db.session.add(nueva_marca)     #Preparamos para la base de datos y luego comiteamos.
         db.session.commit()
         return redirect(url_for('marcas')) #El if termina redireccionando a marcas(funcion), actualiza la info.
 
-    return render_template('marcas.html', marcas=marcas) #A la renderizacion en el template, le pasamos la lista de marcas que obtuvimos en la consulta.
+    return render_template(
+        'marcas.html', 
+        marcas=marcas, 
+        formulario=formulario) #A la renderizacion en el template, le pasamos la lista de marcas que obtuvimos en la consulta.
 
 @app.route('/modelos', methods=['GET', 'POST'])
 def modelos():
