@@ -21,6 +21,9 @@ migrate = Migrate(app, db)
 from models import Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular
 from forms import *
 
+from services.marca_service import MarcaService
+from repositories.marca_repository import MarcaRepository
+
 def precargar_datos():
     try:
         especificaciones = [
@@ -69,13 +72,14 @@ def index(): #(en este caso Index)
 
 @app.route('/marcas', methods=['GET', 'POST']) #A la ruta le pasamos los metodos POST y GET.
 def marcas():
-    marcas = Marca.query.all() #Tomamos lo que haya en el modelo Marca y creamos como una 'lista'.
+    marca_service = MarcaService(MarcaRepository())
+    marcas = marca_service.get_all() #Tomamos lo que haya en el modelo Marca y creamos como una 'lista'.
+    
     formulario = MarcaForm() #tomo el formulario y lo instancio
     
     if request.method == 'POST': #Si el metodo es POST
-        nueva_marca = Marca(nombre=formulario.nombre.data)
-        db.session.add(nueva_marca)     #Preparamos para la base de datos y luego comiteamos.
-        db.session.commit()
+        nombre=formulario.nombre.data
+        marca_service.create(nombre)
         return redirect(url_for('marcas')) #El if termina redireccionando a marcas(funcion), actualiza la info.
 
     return render_template(
