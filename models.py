@@ -96,3 +96,12 @@ class Celular(db.Model):
     def __str__(self) -> str:
         return self.id
     
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    
+    username = db.Column(db.String(40), nullable=False)
+    
+    password_hash = db.Column(db.String(40), nullable=False)
+    
+    def __str__(self):
+        return self.username

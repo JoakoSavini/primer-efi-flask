@@ -1,16 +1,27 @@
 import os
-from flask import Flask, render_template, redirect, request, url_for
+
+from dotenv import dotenv_values, load_dotenv
+
+from flask import (
+    Flask,
+    jsonify, 
+    render_template, 
+    redirect, 
+    request, 
+    url_for)
+
 from flask_sqlalchemy import SQLAlchemy
+
 from flask_migrate import Migrate
 import click
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = os.urandom(24) #creo una key aleatoria de 24 elementos
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') #importo la key desde otro archivo
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 #Configuracion de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/EfiFlask'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -18,7 +29,7 @@ migrate = Migrate(app, db)
 
 
 #Importamos los modelos
-from models import Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular
+from models import Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular, User
 from forms import *
 
 from services.marca_service import MarcaService
@@ -64,6 +75,23 @@ def init_db():
         # Llamo a la funcion de precarga de datos.
         precargar_datos()
         print("Database initialized and data preloaded.")
+
+load_dotenv()
+
+@app.route('/users', methods= ['POST'])
+def users():
+    data = request.get_json()
+    usuario = data.get("username")
+    password = data.get("password")
+    
+    usuario = User(
+        username=usuario,
+        password_hash=password,
+    )
+    db.session.add(usuario)
+    db.session.commit()
+    
+    return jsonify({"Objeto creado": usuario.username})
 
 
 @app.route('/')  #Definicion de ruta
