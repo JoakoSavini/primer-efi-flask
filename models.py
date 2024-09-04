@@ -101,7 +101,7 @@ class User(db.Model):
     
     username = db.Column(db.String(40), nullable=False)
     
-    password_hash = db.Column(db.String(40), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
     
     def __str__(self):
         return self.username

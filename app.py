@@ -15,6 +15,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import click
 
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
+
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') #importo la key desde otro archivo
@@ -84,15 +89,39 @@ def users():
     usuario = data.get("username")
     password = data.get("password")
     
-    usuario = User(
-        username=usuario,
-        password_hash=password,
-    )
-    db.session.add(usuario)
-    db.session.commit()
+    encrypted_password = generate_password_hash(
+        password=password,
+        method='pbkdf2',
+        salt_length=8,
+        )
     
-    return jsonify({"Objeto creado": usuario.username})
+    try:
+        usuario = User(
+            username=usuario,
+            password_hash=encrypted_password,
+        )
+        db.session.add(usuario)
+        db.session.commit()
+        
+        return jsonify({"Objeto creado": usuario.username}), 201
+    except:
+        return jsonify({"Error": "algo salio mal"})
 
+
+@app.route('/login', methods= ['POST'])
+def login():
+    data = request.get_json()
+    usuario = data.get("username")
+    password = data.get("password")
+    
+    usuario = User.query.filter_by(usuario=usuario).first()
+    
+    if usuario and check_password_hash(
+        pwhash=usuario.password_hash,
+        password = password,
+    ):
+        return jsonify('Mensaje', 'Usuario Logeado')
+    return jsonify('Mensaje', 'La contraseña no coincide')
 
 @app.route('/')  #Definicion de ruta
 def index(): #(en este caso Index)
