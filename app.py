@@ -1,7 +1,12 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-import click
+from flask_jwt_extended import JWTManager
+from flask_marshmallow import Marshmallow
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -9,16 +14,22 @@ app.config['DEBUG'] = True
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 #Configuracion de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/EfiFlask'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+jwt = JWTManager(app)
+ma = Marshmallow(app)
+
 
 
 #Importamos los modelos
-from models import Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular
+from models import User, Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular
 
+from views import register_bp
+register_bp(app)
 
 def precargar_datos():
     try:
