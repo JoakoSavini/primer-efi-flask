@@ -1,5 +1,5 @@
 from datetime import timedelta
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -11,6 +11,7 @@ from werkzeug.security import (
 )
 from app import db
 from models import User
+from schemas import UserSchema, UserMinimalSchema
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -50,6 +51,15 @@ def users():
                 username = data.get('usuario')
                 password = data.get('contrasenia')
                 
+                data_validate = dict(
+                    username=username,
+                    password_hash=password,
+                    is_admin=False
+                )
+                errors = UserSchema().validate(data_validate)
+                if errors:
+                    return make_response(jsonify(errors))
+                
                 try:
                     new_usuario = User(
                         username=username,
@@ -76,8 +86,7 @@ def users():
                 return jsonify(Mensaje="solo el admin puede crear usuarios")   
     
     usuarios = User.query.all()
-    usuarios_dict=[]
-    for usuario in usuarios:
-        usuarios_dict.append(usuario.to_dict())
-    
-    return jsonify(usuarios_dict)
+    if administrador is True:
+        return UserSchema().dump(obj=usuarios, many=True)
+    else:
+        return UserMinimalSchema().dump(obj=usuarios, many=True)
