@@ -60,8 +60,59 @@ class CelularSchema(ma.SQLAlchemySchema):
     modelo = ma.Nested(ModeloSchema)
     
 
-    
+class CategoriaSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Categoria
 
-    
+    id = ma.auto_field()
+    nombre = ma.auto_field()
+    celular = ma.Nested(CelularSchema)
 
+
+class EspecificacionSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Especificacion
     
+    id = ma.auto_field()
+    ram = ma.auto_field()
+    almacenamiento = ma.auto_field()
+    celular =  ma.Nested(CelularSchema)
+
+
+class ProveedorSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Proveedor
+    id = ma.auto_field() 
+    nombre = ma.auto_field()
+    localidad = ma.auto_field()
+    contacto = ma.auto_field()
+    celular =  ma.Nested(CelularSchema)
+    fabricante_id = ma.auto_field()
+
+
+class FabricanteSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Fabricante
+
+    id = ma.auto_field() 
+    nombre = ma.auto_field()
+    localidad = ma.auto_field()
+    contacto = ma.auto_field()
+    
+    proveedor = ma.Nested(ProveedorSchema)
+
+class GamaSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Gama
+    
+    id = ma.auto_field()
+    nombre = ma.auto_field()
+    celular = ma.Nested(CelularSchema)
+
+class SistemaOperativoSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = SistemaOperativo
+    
+    id = ma.auto_field()
+    nombre = ma.auto_field()
+    celular = ma.Nested(CelularSchema)
