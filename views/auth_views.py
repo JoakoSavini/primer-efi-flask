@@ -34,7 +34,7 @@ def login():
             )
         )
         
-        return jsonify({'Token': f'Bearer {access_token}'})
+        return jsonify({'Token' : f'Bearer {access_token}'})
     
     return jsonify(mensaje= "el usuario y la contraseña no coinciden")
 
