@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -22,6 +23,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
 ma = Marshmallow(app)
+cors = CORS(app, resources={r"/*":{"origins":"*"}})
 
 
 
