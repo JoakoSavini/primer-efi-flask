@@ -28,7 +28,7 @@ cors = CORS(app, resources={r"/*":{"origins":"*"}})
 
 
 #Importamos los modelos
-from models import User, Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Categoria, Celular
+from models import User, Marca, Modelo, Fabricante, Proveedor, Gama, SistemaOperativo, Especificacion, Celular
 
 from views import register_bp
 register_bp(app)

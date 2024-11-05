@@ -1,20 +1,20 @@
-"""user
+"""primero user
 
-Revision ID: f9d41e23946e
+Revision ID: fd70a9f88c4a
 Revises: 
-Create Date: 2024-10-23 12:04:48.474052
+Create Date: 2024-11-05 20:11:16.517440
 
 """
-from werkzeug.security import generate_password_hash
-from app import db
-from models import User
-
 from alembic import op
 import sqlalchemy as sa
 
+from werkzeug.security import generate_password_hash
+from models import User
+from app import db
+
 
 # revision identifiers, used by Alembic.
-revision = 'f9d41e23946e'
+revision = 'fd70a9f88c4a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,7 +37,7 @@ def upgrade():
         admin_user = User(
             username='admin',
             password_hash=generate_password_hash('admin'),
-            is_admin=True
+            is_admin=True,
         )
         db.session.add(admin_user)
         db.session.commit()

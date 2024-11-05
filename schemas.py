@@ -1,6 +1,6 @@
 from app import ma
 from marshmallow import validates, ValidationError
-from models import User, Categoria, Celular, Especificacion, Fabricante, Gama, Marca, Modelo, Proveedor, SistemaOperativo
+from models import User, Celular, Especificacion, Fabricante, Gama, Marca, Modelo, Proveedor, SistemaOperativo
 
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -51,20 +51,10 @@ class CelularSchema(ma.SQLAlchemySchema):
     proveedor_id = ma.auto_field()
     especificacion_id = ma.auto_field()
     modelo_id = ma.auto_field()
-    categoria_id = ma.auto_field()
     gama_id = ma.auto_field()
     sistema_operativo_id = ma.auto_field()
 
     modelo = ma.Nested(ModeloSchema, only=("id", "nombre"))  # Simplificación
-
-
-class CategoriaSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Categoria
-
-    id = ma.auto_field()
-    nombre = ma.auto_field()
-
 
 class EspecificacionSchema(ma.SQLAlchemySchema):
     class Meta:

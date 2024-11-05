@@ -23,7 +23,7 @@ def create_celular():
         return jsonify({"mensaje": "Acceso denegado, solo administradores pueden crear celulares"}), 403
 
     data = request.get_json()
-    nuevo_celular = Celular(nombre=data['nombre'], marca=data['marca'], modelo=data['modelo'], precio=data['precio'], proveedor_id=data['proveedor_id'])
+    nuevo_celular = Celular(nombre=data['nombre'], usado=data['uso'], precio=data['precio'], modelo_id=data['modelo'],gama_id=data['gama'], sistema_operativo_id=data['so'], especificacion_id=data['especificaciones'], proveedor_id=data['proveedor'])
     db.session.add(nuevo_celular)
     db.session.commit()
     return celular_schema.dump(nuevo_celular), 201
