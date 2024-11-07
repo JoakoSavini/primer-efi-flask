@@ -83,10 +83,76 @@ def users():
                         }
                     )
             else:
-                return jsonify(Mensaje="solo el admin puede crear usuarios")   
+                return jsonify(Mensaje="solo el admin puede crear usuarios") 
     
     usuarios = User.query.all()
     if administrador is True:
         return UserSchema().dump(obj=usuarios, many=True)
     else:
         return UserMinimalSchema().dump(obj=usuarios, many=True)
+
+
+@auth_bp.route('/users/<int:id>', methods=['PUT'])
+@jwt_required()  # Solo los usuarios logueados pueden actualizar usuarios
+def update_user(id):
+    additional_data = get_jwt()
+    administrador = additional_data.get('administrador')  # Así lo guardé en el login
+
+    if administrador is True:
+        data = request.get_json()
+        username = data.get('usuario')
+        password = data.get('contrasenia')
+
+        # Validar los datos de entrada
+        data_validate = dict(
+            username=username,
+            password_hash=password if password else None,  # Si no hay nueva contraseña, no la actualizamos
+            is_admin=False
+        )
+        errors = UserSchema().validate(data_validate)
+        if errors:
+            return make_response(jsonify(errors), 400)
+
+        try:
+            # Buscar al usuario a actualizar
+            user = User.query.get(id)
+            if user:
+                # Actualizar los campos si se proporcionan nuevos valores
+                if username:
+                    user.username = username
+                if password:
+                    user.password_hash = generate_password_hash(password)
+                
+                # Guardar los cambios en la base de datos
+                db.session.commit()
+
+                return jsonify(
+                    {
+                        "Mensaje": "Usuario actualizado correctamente",
+                        "Usuario": user.to_dict()
+                    }
+                )
+            else:
+                return jsonify({"Mensaje": "Usuario no encontrado"}), 404
+        except Exception as e:
+            return jsonify({"Mensaje": f"Error al actualizar el usuario: {str(e)}"}), 500
+    else:
+        return jsonify(Mensaje="Solo el admin puede actualizar usuarios"), 403
+
+
+@auth_bp.route('/users/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    additional_data = get_jwt()
+    administrador = additional_data.get('administrador') 
+
+    if administrador is False:
+        return jsonify({"Mensaje": "Solo el admin puede eliminar usuarios"}), 403
+    
+    user = User.query.get(id)
+    if not user:
+        return jsonify({"Mensaje": "Usuario no encontrado"}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"Mensaje": "Usuario eliminado correctamente"})
