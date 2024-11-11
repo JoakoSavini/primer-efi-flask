@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt
 from app import db
 from models import Modelo
@@ -23,7 +23,16 @@ def create_modelo():
         return jsonify({"mensaje": "Acceso denegado, solo administradores pueden crear modelos"}), 403
 
     data = request.get_json()
-    nuevo_modelo = Modelo(nombre=data['nombre'], marca_id=data['marca_id'])
+    nombre = data.get('nombre')
+    
+    data_validate = dict(
+                    nombre=nombre
+                )
+    errors = ModeloSchema().validate(data_validate)
+    if errors:
+        return make_response(jsonify(errors))
+    
+    nuevo_modelo = Modelo(nombre=nombre, marca_id=data['marca_id'])
     db.session.add(nuevo_modelo)
     db.session.commit()
     return modelo_schema.dump(nuevo_modelo), 201

@@ -7,6 +7,7 @@ class UserSchema(ma.SQLAlchemySchema):
         model = User
         
     id = ma.auto_field()
+    password_hash = ma.auto_field()
     username = ma.auto_field()
     is_admin = ma.auto_field()
 
@@ -29,6 +30,11 @@ class MarcaSchema(ma.SQLAlchemySchema):
     id = ma.auto_field()
     nombre = ma.auto_field()
     
+    @validates('nombre')
+    def validate_username(self, value):
+        if Marca.query.filter_by(nombre=value).first():
+            raise ValidationError("Ya existe una marca con ese nombre")
+        return value
 
 class ModeloSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -38,6 +44,12 @@ class ModeloSchema(ma.SQLAlchemySchema):
     nombre = ma.auto_field()
     marca_id = ma.auto_field()
     marca = ma.Nested(MarcaSchema, only=("id", "nombre"))  # Simplificación
+    
+    @validates('nombre')
+    def validate_username(self, value):
+        if Modelo.query.filter_by(nombre=value).first():
+            raise ValidationError("Ya existe un modelo con ese nombre")
+        return value
 
 
 class CelularSchema(ma.SQLAlchemySchema):

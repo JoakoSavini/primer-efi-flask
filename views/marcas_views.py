@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt
 from app import db
 from models import Marca
@@ -23,6 +23,15 @@ def create_marca():
         return jsonify({"mensaje": "Acceso denegado, solo administradores pueden crear marcas"}), 403
 
     data = request.get_json()
+    nombre = data.get('nombre')
+    
+    data_validate = dict(
+                    nombre=nombre
+                )
+    errors = MarcaSchema().validate(data_validate)
+    if errors:
+        return make_response(jsonify(errors))
+                
     nueva_marca = Marca(nombre=data['nombre'])
     db.session.add(nueva_marca)
     db.session.commit()
