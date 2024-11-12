@@ -17,7 +17,7 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    data = request.authorization
+    data = request.get_json()
     username = data.username
     password = data.password #la recibo desde la peticion, la debo comparar con el hash
     
