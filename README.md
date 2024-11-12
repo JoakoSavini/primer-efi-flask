@@ -71,23 +71,23 @@ Devuelve una lista de todos los usuarios. Los administradores verán detalles co
 - Cabecera de la solicitud: Authorization: Token <tu_token_de_autenticacion>
 - Ejemplo de respuesta:
     - si el usuario es admin
-```bash
-[
-    {
-        "id": 1,
-        "username": "usuario1",
-        "is_admin": false
-    }
-]
-```
+    ```bash
+    [
+        {
+            "id": 1,
+            "username": "usuario1",
+            "is_admin": false
+        }
+    ]
+    ```
     - si el usuario es "regular":
-```bash
-[
-    {
-        "username": "usuario1"
-    }
-]
-```
+    ```bash
+    [
+        {
+            "username": "usuario1"
+        }
+    ]
+    ```
 
 
 
