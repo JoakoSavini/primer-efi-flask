@@ -49,7 +49,7 @@ __Login(POST/login)__
 Este endpoint permite a los usuarios autenticarse con su username y password, generando un token para las siguientes solicitudes.
 - Endpoint: /api/login/
 - Metodo: POST
-- Cuerpo de la Solicitud:
+- Cabecera de la Solicitud: Authorization Basic
 ```bash
 {
     "username": "admin",
@@ -88,6 +88,59 @@ Devuelve una lista de todos los usuarios. Los administradores verán detalles co
         }
     ]
     ```
+__Crear Usuario(POST/users)__
+Permite a un administrador crear un nuevo usuario. El nuevo usuario no tiene privilegios de administrador por defecto.
+- Endpoint: /api/users/
+- Metodo: POST
+- Cuerpo de la Solicitud:
+```bash
+{
+    "usuario": "usuario"
+    "contrasenia": "contrasenia"
+}
+```
+- Ejemplo de Respuesta:
+    - si el usuario es Admin:
+    ```bash
+    {
+        "Mensaje": "Usuario generado correctamente",
+        "Usuario": {
+            "id": 2,
+            "username": "nuevo_usuario",
+            "is_admin": false
+        }
+    }
+    ```
+    - si el usuario es "regular":
+    ```bash
+    {
+        "Mensaje": "solo el admin puede crear usuarios"
+    }    
+
+__Actualizar Usuario(PUT/users/id)__
+Permite a un administrador actualizar los datos de un usuario existente.
+- Endpoint: /api/users/<id>
+- Metodo: PUT
+- Autenticacion: Requiere token y permisos de administrador.
+- Datos de entrada:
+```bash
+{
+    "usuario": "Nuevo nombre de usuario",
+    "contrasenia": "Nueva contrasenia"
+}
+```
+- Respuesta Esperada:
+```bash
+{
+    "Mensaje": "Usuario actualizado correctamente",
+    "Usuario": {
+        "id": 2,
+        "username": "usuario_actualizado"
+        "id_admin": false
+    }
+}
+```
+
 
 
 
