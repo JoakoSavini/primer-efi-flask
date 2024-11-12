@@ -172,6 +172,9 @@ __La API utiliza dos esquemas para la validación y serialización de datos:__
 - Los usuarios autenticados tienen que incluir el token en el encabezado `Authorization Basic` en las solicitudes
 - Solo los administradores pueden realizar operaciones `POST`, `PUT` y `DELETE`.
 
+# Consideraciones
+__Todo lo mencionado anteriormente que es para crear, editar, eliminar usuarios, tambien es aplicable a las rutas creadas para marcas, modelos, proveedores, fabricantes y celulares; donde solamente los administradores pueden realizar las acciones mencionadas y los usuarios "regulares" solo pueden ver las listas de datos.__ 
+
 
 
 
