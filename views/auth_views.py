@@ -17,26 +17,28 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    data = request.authorization
-    username = data.username
-    password = data.password #la recibo desde la peticion, la debo comparar con el hash
+    data = request.get_json()
+    # Usa .get() para evitar el error si los valores no están en el JSON
+    username = data.get("username")
+    password = data.get("password")
     
+    if not username or not password:
+        return jsonify({"mensaje": "Username y password son requeridos"}), 400
+
     usuario = User.query.filter_by(username=username).first()
     
-    if usuario and check_password_hash(
-        pwhash=usuario.password_hash, password=password
-    ): #retorna true or false
+    if usuario and check_password_hash(usuario.password_hash, password):
         access_token = create_access_token(
             identity=username,
             expires_delta=timedelta(minutes=20),
-            additional_claims=dict(
-                administrador=usuario.is_admin
-            )
+            additional_claims=dict(administrador=usuario.is_admin)
         )
         
-        return jsonify({'Token' : f'Bearer {access_token}'})
+        # Cambia 'Token' a 'token' para facilitar el uso en el frontend
+        return jsonify({"token": f"{access_token}"})
     
-    return jsonify(mensaje= "el usuario y la contraseña no coinciden")
+    return jsonify({"mensaje": "El usuario y la contraseña no coinciden"}), 401
+
 
 @auth_bp.route('/users', methods=['GET', 'POST'])
 @jwt_required() #solo los users logeados pueden ver el resto de usuarios
