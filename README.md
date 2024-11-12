@@ -47,15 +47,12 @@ flask run --reload
 ### Endpoints
 __Login(POST/login)__
 Este endpoint permite a los usuarios autenticarse con su username y password, generando un token para las siguientes solicitudes.
-- Endpoint: /api/login/
-- Metodo: POST
-- Cabecera de la Solicitud: Authorization Basic
-```bash
-{
-    "username": "admin",
-    "password": "admin"
-}
-```
+- Endpoint: `/api/login/`
+- Metodo: `POST`
+- Autenticacion: `Authorization Basic`
+    - Ingresar datos de usuario:
+        - username: `usuario`
+        - password: `password`
 - Ejemplo de respuesta:
 ```bash
 {
@@ -66,11 +63,11 @@ Este endpoint permite a los usuarios autenticarse con su username y password, ge
 
 __Usuarios(GET/users)__
 Devuelve una lista de todos los usuarios. Los administradores verán detalles completos de los usuarios, mientras que los usuarios regulares verán solo información básica.
-- Endpoint: /api/users/
-- Metodo: GET
-- Cabecera de la solicitud: Authorization: Token <tu_token_de_autenticacion>
+- Endpoint: `/api/users/`
+- Metodo: `GET`
+- Cabecera de la solicitud: `Authorization: Token <tu_token_de_autenticacion>`
 - Ejemplo de respuesta:
-    - si el usuario es admin
+    - si el usuario es `admin`
     ```bash
     [
         {
@@ -80,7 +77,7 @@ Devuelve una lista de todos los usuarios. Los administradores verán detalles co
         }
     ]
     ```
-    - si el usuario es "regular":
+    - si el usuario es `"regular"`:
     ```bash
     [
         {
@@ -90,17 +87,17 @@ Devuelve una lista de todos los usuarios. Los administradores verán detalles co
     ```
 __Crear Usuario(POST/users)__
 Permite a un administrador crear un nuevo usuario. El nuevo usuario no tiene privilegios de administrador por defecto.
-- Endpoint: /api/users/
-- Metodo: POST
+- Endpoint: `/api/users/`
+- Metodo: `POST`
 - Cuerpo de la Solicitud:
 ```bash
 {
-    "usuario": "usuario"
+    "usuario": "nuevo_usuario"
     "contrasenia": "contrasenia"
 }
 ```
 - Ejemplo de Respuesta:
-    - si el usuario es Admin:
+    - si el usuario es `Admin`:
     ```bash
     {
         "Mensaje": "Usuario generado correctamente",
@@ -111,7 +108,7 @@ Permite a un administrador crear un nuevo usuario. El nuevo usuario no tiene pri
         }
     }
     ```
-    - si el usuario es "regular":
+    - si el usuario es `"regular"`:
     ```bash
     {
         "Mensaje": "solo el admin puede crear usuarios"
@@ -119,9 +116,9 @@ Permite a un administrador crear un nuevo usuario. El nuevo usuario no tiene pri
 
 __Actualizar Usuario(PUT/users/id)__
 Permite a un administrador actualizar los datos de un usuario existente.
-- Endpoint: /api/users/<id>
-- Metodo: PUT
-- Autenticacion: Requiere token y permisos de administrador.
+- Endpoint: `/api/users/<id>`
+- Metodo: `PUT`
+- Autenticacion: `Requiere token y permisos de administrador.`
 - Datos de entrada:
 ```bash
 {
@@ -140,7 +137,40 @@ Permite a un administrador actualizar los datos de un usuario existente.
     }
 }
 ```
+__Eliminar Usuario(DELETE/users/id)__
+Permite a un administrador eliminar un usuario existente.
+- Endpoint: `/api/users/<id>`
+- Metodo: `DELETE`
+- Autenticacion: `Requiere Token y permisos de Administrador`
+- Respuestas esperadas:
+    - si existe el usuario:
+    ```bash
+    {
+        "Mensaje": "Usuario eliminado correctamente"
+    }
+    ```
+    - si no estas autenticado como admin:
+    ```bash
+    {
+        "Mensaje": "Solo el admin puede eliminar usuarios"
+    }
+    ```
+    - si no se encuentra el usuario:
+    ```bash
+    {
+        "Mensaje": "Usuario no encontrado"
+    }
+    ```
 
+### Esquemas
+__La API utiliza dos esquemas para la validación y serialización de datos:__
+- UserSchema: Para los administradores, proporciona todos los detalles de los usuarios
+- UserMinimalSchema: Para los usuarios "regulares", muestra informacion basica
+
+### Autenticacion
+- La autenticacion se realiza mediante tokens JWT generados en el endpoin `/login`
+- Los usuarios autenticados tienen que incluir el token en el encabezado `Authorization Basic` en las solicitudes
+- Solo los administradores pueden realizar operaciones `POST`, `PUT` y `DELETE`.
 
 
 
